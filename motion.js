@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
-   120Hz Inertia Scrolling, ScrollTrigger Reveals & Bezier Physics
-   Complete Production Motion Script with Solid Vertical Process Reveal
+   120Hz Inertia Scrolling, Damped Parallax & Hardware-Optimized Physics
+   Complete Production Motion Script with Ultra-Smooth Non-Jank Scrolling
    ========================================================================== */
 
 (function () {
@@ -20,7 +20,7 @@
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.2,
       infinite: false
     });
 
@@ -33,7 +33,8 @@
         lenis.raf(time * 1000);
       });
 
-      gsap.ticker.lagSmoothing(0);
+      // Buffer micro-drops so scrolling never hitches or stutters
+      gsap.ticker.lagSmoothing(500, 33);
     }
   }
 
@@ -83,7 +84,7 @@
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.15
+        scrub: 0.2
       }
     });
 
@@ -152,23 +153,24 @@
     );
 
     gsap.to("#hero-img", {
-      yPercent: 18,
+      yPercent: 16,
       ease: "none",
       scrollTrigger: {
         trigger: "#hero-section",
         start: "top top",
         end: "bottom top",
-        scrub: true
+        scrub: 0.5
       }
     });
   }
 
   /* --------------------------------------------------------------------------
-     5. SECTION REVEALS & COMPONENT STAGGERS
+     5. SECTION REVEALS & DAMPED PARALLAX (ELIMINATES SCROLL JANK)
      -------------------------------------------------------------------------- */
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
+    // Curtain reveal on subscribe photo with fastScrollEnd protection
     document.querySelectorAll(".reveal-curtain:not(.hero-media-wrapper)").forEach((curtain) => {
       gsap.fromTo(
         curtain,
@@ -176,25 +178,27 @@
         {
           clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
           opacity: 1,
-          duration: 1.1,
-          ease: "power3.out",
+          duration: 1.0,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: curtain,
-            start: "top 82%",
-            toggleActions: "play none none none"
+            start: "top 85%",
+            toggleActions: "play none none none",
+            fastScrollEnd: true
           }
         }
       );
     });
 
+    // Reviews Staggered Slide-In
     const reviewCards = document.querySelectorAll(".review-card");
     if (reviewCards.length > 0) {
       gsap.from(reviewCards, {
         opacity: 0,
-        y: 40,
+        y: 35,
         stagger: 0.12,
-        duration: 0.9,
-        ease: "power3.out",
+        duration: 0.85,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: "#reviews-grid",
           start: "top 80%"
@@ -202,6 +206,7 @@
       });
     }
 
+    // Roastery Dual Photo Parallax with Damped Smooth Scrub (No Stutter)
     const photoMain = document.querySelector(".roastery-photo-main");
     const photoAccent = document.querySelector(".roastery-photo-accent");
 
@@ -213,24 +218,25 @@
           trigger: ".roastery-images-composite",
           start: "top bottom",
           end: "bottom top",
-          scrub: true
+          scrub: 0.6 // Smooth damping avoids raw mousewheel jumping
         }
       });
     }
 
     if (photoAccent) {
       gsap.to(photoAccent, {
-        yPercent: -22,
+        yPercent: -18,
         ease: "none",
         scrollTrigger: {
           trigger: ".roastery-images-composite",
           start: "top bottom",
           end: "bottom top",
-          scrub: true
+          scrub: 0.8 // Damped fluid float
         }
       });
     }
 
+    // Dynamic Stats Count-Up
     const statsRow = document.querySelector(".roastery-stats-row");
     if (statsRow) {
       ScrollTrigger.create({
@@ -273,21 +279,20 @@
 
     gsap.fromTo(
       cards,
-      { opacity: 0, y: 28, rotation: 0.8 },
+      { opacity: 0, y: 24, rotation: 0.5 },
       {
         opacity: 1,
         y: 0,
         rotation: 0,
-        duration: 0.75,
-        stagger: 0.07,
-        ease: "power3.out"
+        duration: 0.7,
+        stagger: 0.06,
+        ease: "power2.out"
       }
     );
   }
 
   /* --------------------------------------------------------------------------
-     7. FROM FARM TO CUP REVEAL ANIMATION (CLEAN EDITORIAL PROCESS STAGGER)
-     Zero sideways scroll glitch, zero empty space. Pure vertical rhythm.
+     7. FROM FARM TO CUP (SOLID STAGGERED REVEAL)
      -------------------------------------------------------------------------- */
   function setupStorySectionAnimation() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
@@ -297,10 +302,10 @@
 
     gsap.from(panels, {
       opacity: 0,
-      y: 40,
-      duration: 0.85,
-      stagger: 0.12,
-      ease: "power3.out",
+      y: 35,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power2.out",
       scrollTrigger: {
         trigger: "#story-panels-track",
         start: "top 82%",
