@@ -1,6 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
    120Hz Inertia Scrolling, ScrollTrigger Pinning & Bezier Physics
+   Complete Production Motion Script with 992px+ Breakpoint & Refresh Hooks
    ========================================================================== */
 
 (function () {
@@ -17,7 +18,7 @@
   if (!prefersReducedMotion && typeof Lenis !== "undefined") {
     lenis = new Lenis({
       duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Expo-out curve
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       touchMultiplier: 1.5,
       infinite: false
@@ -25,7 +26,6 @@
 
     window.lenisInstance = lenis;
 
-    // Synchronize Lenis with GSAP ScrollTrigger
     if (typeof ScrollTrigger !== "undefined") {
       lenis.on("scroll", ScrollTrigger.update);
 
@@ -52,7 +52,6 @@
 
         e.preventDefault();
 
-        // Close mobile drawer if open
         const mobileDrawer = document.getElementById("mobile-nav-drawer");
         if (mobileDrawer && mobileDrawer.classList.contains("is-open")) {
           mobileDrawer.classList.remove("is-open");
@@ -61,7 +60,7 @@
 
         if (lenis) {
           lenis.scrollTo(targetEl, {
-            offset: -72, // Navbar clearance
+            offset: -72,
             duration: 1.2
           });
         } else {
@@ -77,7 +76,6 @@
   function setupScrollDynamics() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Top progress indicator
     gsap.to("#scroll-progress", {
       scaleX: 1,
       ease: "none",
@@ -89,7 +87,6 @@
       }
     });
 
-    // Smart Header: hide on down-scroll, reveal on up-scroll
     const header = document.getElementById("site-header");
     if (!header) return;
 
@@ -117,14 +114,12 @@
 
     const heroTl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-    // 1. Clip-path curtain reveal on hero image
     heroTl.fromTo(
       ".hero-media-wrapper",
       { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
       { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.3 }
     );
 
-    // 2. Slow scale down of background photo from 1.15 to 1.0
     heroTl.fromTo(
       "#hero-img",
       { scale: 1.15 },
@@ -132,7 +127,6 @@
       0
     );
 
-    // 3. Staggered reveal of hero typography & CTAs
     heroTl.from(
       ".hero-badge",
       { opacity: 0, y: 20, duration: 0.8 },
@@ -157,7 +151,6 @@
       0.9
     );
 
-    // Subtle parallax on hero image as user scrolls away
     gsap.to("#hero-img", {
       yPercent: 18,
       ease: "none",
@@ -176,7 +169,6 @@
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Generic Curtain Reveal for Image Containers
     document.querySelectorAll(".reveal-curtain:not(.hero-media-wrapper)").forEach((curtain) => {
       gsap.fromTo(
         curtain,
@@ -195,7 +187,6 @@
       );
     });
 
-    // Reviews Alternating Slide-In
     const reviewCards = document.querySelectorAll(".review-card");
     if (reviewCards.length > 0) {
       gsap.from(reviewCards, {
@@ -211,7 +202,6 @@
       });
     }
 
-    // Roastery Dual Photo Parallax Speeds
     const photoMain = document.querySelector(".roastery-photo-main");
     const photoAccent = document.querySelector(".roastery-photo-accent");
 
@@ -230,7 +220,7 @@
 
     if (photoAccent) {
       gsap.to(photoAccent, {
-        yPercent: -22, // Faster speed for layered 3D depth
+        yPercent: -22,
         ease: "none",
         scrollTrigger: {
           trigger: ".roastery-images-composite",
@@ -241,7 +231,6 @@
       });
     }
 
-    // Dynamic Stats Count-Up Animation
     const statsRow = document.querySelector(".roastery-stats-row");
     if (statsRow) {
       ScrollTrigger.create({
@@ -297,23 +286,24 @@
   }
 
   /* --------------------------------------------------------------------------
-     7. PINNED HORIZONTAL STORY TRACK ("FROM FARM TO CUP")
-     Desktop min-width 1024px: Pin & TranslateX
-     Mobile: Vertical stacked layout without Pin
+     7. PINNED HORIZONTAL STORY TRACK (BUG 1 FIX: 992px+ EXACT BREAKPOINT)
+     Desktop min-width 992px: Pin & TranslateX
+     Mobile/Tablet (<992px): Normal vertical stacked layout without Pin
      -------------------------------------------------------------------------- */
   function setupHorizontalStoryTrack() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
     const mm = gsap.matchMedia();
 
-    // Desktop view (pin horizontal)
-    mm.add("(min-width: 1024px)", () => {
+    // Desktop view (pinned horizontal scroll for 992px and wider)
+    mm.add("(min-width: 992px)", () => {
       const track = document.getElementById("story-panels-track");
       const section = document.getElementById("story-pinned-section");
       if (!track || !section) return;
 
       const panels = gsap.utils.toArray(".story-panel");
       const totalPanels = panels.length;
+      if (totalPanels === 0) return;
 
       gsap.to(track, {
         xPercent: -100 * (totalPanels - 1),
@@ -323,26 +313,14 @@
           pin: true,
           scrub: 1,
           snap: 1 / (totalPanels - 1),
-          end: () => "+=" + track.offsetWidth
+          end: () => "+=" + (track.scrollWidth - window.innerWidth)
         }
       });
     });
 
-    // Mobile view: normal vertical flow, no pin, subtle fade-ins
-    mm.add("(max-width: 1023px)", () => {
-      const panels = document.querySelectorAll(".story-panel");
-      panels.forEach((p) => {
-        gsap.from(p.querySelector(".story-panel-inner"), {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: p,
-            start: "top 80%"
-          }
-        });
-      });
+    // Mobile & Tablet view: normal vertical stack without pin
+    mm.add("(max-width: 991px)", () => {
+      // Normal vertical flow; panels are already 100% visible via CSS
     });
   }
 
@@ -359,7 +337,6 @@
 
       const cartRect = cartBtn.getBoundingClientRect();
 
-      // Create lightweight SVG flying token
       const flyer = document.createElement("div");
       flyer.className = "cart-flyer-clone";
       flyer.style.position = "fixed";
@@ -382,7 +359,6 @@
       const destX = cartRect.left + cartRect.width / 2 - (startRect.left + startRect.width / 2);
       const destY = cartRect.top + cartRect.height / 2 - (startRect.top + startRect.height / 2);
 
-      // Curved Bezier motion using GSAP
       gsap.to(flyer, {
         duration: 0.65,
         ease: "power3.inOut",
@@ -411,7 +387,6 @@
 
   /* --------------------------------------------------------------------------
      9. MAGNETIC BUTTONS & SUBTLE CURSOR FOLLOWER
-     Activated strictly on devices with hover capability and fine pointer
      -------------------------------------------------------------------------- */
   function setupMagneticAndCursor() {
     const isPointerFine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -419,7 +394,6 @@
 
     const cursor = document.getElementById("custom-cursor");
 
-    // Smooth cursor follower
     if (cursor) {
       window.addEventListener("mousemove", (e) => {
         cursor.style.opacity = "1";
@@ -436,7 +410,6 @@
       });
     }
 
-    // Magnetic pulling effect on .btn-magnetic
     document.querySelectorAll(".btn-magnetic").forEach((btn) => {
       btn.addEventListener("mousemove", (e) => {
         const rect = btn.getBoundingClientRect();
@@ -471,7 +444,8 @@
   }
 
   /* --------------------------------------------------------------------------
-     10. INITIALIZATION
+     10. INITIALIZATION & LAYOUT REFRESH HOOKS (BUG 1 FIX)
+     Calls ScrollTrigger.refresh() on window load and after fonts ready
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
     setupSmoothAnchorLinks();
@@ -481,6 +455,22 @@
     setupHorizontalStoryTrack();
     setupFlyToCartListener();
     setupMagneticAndCursor();
+  });
+
+  // Re-calculate layout after webfonts load
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      if (typeof ScrollTrigger !== "undefined") {
+        ScrollTrigger.refresh();
+      }
+    });
+  }
+
+  // Re-calculate layout after all images & external resources load
+  window.addEventListener("load", () => {
+    if (typeof ScrollTrigger !== "undefined") {
+      ScrollTrigger.refresh();
+    }
   });
 
   // Re-animate grid whenever shop re-renders
