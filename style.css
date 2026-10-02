@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Stylesheet with Hardware-Accelerated Smooth Scroll Layers & Legal Policy Modals
+   Complete Stylesheet with Zero-Jank Image Performance & GPU Layer Optimization
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -178,6 +178,7 @@ img, svg, picture {
 
 img {
   background: linear-gradient(135deg, var(--color-oat) 0%, var(--color-oat-dark) 100%);
+  image-rendering: auto;
 }
 
 .container {
@@ -242,9 +243,7 @@ img {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(246, 240, 230, 0.97);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(246, 240, 230, 0.98);
   z-index: var(--z-nav);
   border-bottom: 1px solid var(--color-border-subtle);
   transform: translateY(0) translateZ(0);
@@ -1051,10 +1050,11 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. SUBSCRIBE & SAVE SECTION (HARDWARE ACCELERATED)
+   8. SUBSCRIBE & SAVE SECTION (LIGHTWEIGHT GPU-LAYERED)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
+  contain: paint;
 }
 
 .subscribe-grid {
@@ -1074,17 +1074,13 @@ img {
   border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;
-  will-change: transform;
   transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .subscribe-img {
   width: 100%;
   height: clamp(340px, 45vw, 540px);
   object-fit: cover;
-  will-change: transform;
   transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 .subscribe-benefits-list {
@@ -1124,11 +1120,12 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (GPU-ISOLATED)
+   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (GPU-ISOLATED & SHADOW LIGHT)
    -------------------------------------------------------------------------- */
 .roastery-section {
   position: relative;
   overflow: hidden;
+  contain: paint;
 }
 
 .roastery-grid {
@@ -1147,18 +1144,14 @@ img {
 .roastery-images-composite {
   position: relative;
   min-height: 420px;
-  will-change: transform;
   transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .roastery-photo-main {
   width: 82%;
   height: 380px;
   object-fit: cover;
   border-radius: var(--radius-xl);
-  will-change: transform;
   transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .roastery-photo-accent {
   position: absolute;
@@ -1168,14 +1161,11 @@ img {
   height: 240px;
   object-fit: cover;
   border-radius: var(--radius-lg);
-  border: 6px solid var(--color-cream);
-  box-shadow: 0 20px 40px rgba(42, 26, 18, 0.12);
-  will-change: transform;
+  border: 5px solid var(--color-cream);
+  box-shadow: 0 10px 25px rgba(42, 26, 18, 0.08); /* Lightweight shadow prevents overdraw lag */
   transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
-/* Containment layer prevents entire page reflow during number animation */
 .roastery-stats-row {
   display: grid;
   grid-template-columns: 1fr;
