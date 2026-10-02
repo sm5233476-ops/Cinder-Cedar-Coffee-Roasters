@@ -1,6 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — APPLICATION CORE (script.js)
    Shop, Cart, Quick View, Checkout & Accessibility Logic
+   Complete Production Script with Round 2 Polish & Safety Checks
    ========================================================================== */
 
 (function () {
@@ -20,7 +21,8 @@
   };
 
   /* --------------------------------------------------------------------------
-     2. LOCAL STORAGE CART PERSISTENCE (cc_cart_v1)
+     2. LOCAL STORAGE CART PERSISTENCE (cc_cart_v1 ONLY)
+     Strict Privacy: No user personal data is ever saved to localStorage.
      -------------------------------------------------------------------------- */
   function loadCartFromStorage() {
     try {
@@ -55,7 +57,6 @@
      3. FINANCIAL MATH CALCULATIONS (INTEGER CENTS)
      -------------------------------------------------------------------------- */
   function calculateCartTotals() {
-    // 1. Subtotal of all line items (after any subscription discount)
     let subtotalCents = 0;
     let totalItemCount = 0;
 
@@ -75,16 +76,13 @@
       totalItemCount += item.quantity;
     });
 
-    // 2. Promo code calculation (WELCOME10)
     let promoDiscountCents = 0;
     if (state.appliedPromo === BRAND.promoCode) {
       promoDiscountCents = Math.round(subtotalCents * (BRAND.promoDiscountPercent / 100));
     }
 
-    // 3. Subtotal after promo discount
     const netSubtotalCents = Math.max(0, subtotalCents - promoDiscountCents);
 
-    // 4. Shipping calculation ($5.95 standard or free over $40.00)
     let shippingCents = 0;
     if (netSubtotalCents > 0) {
       if (netSubtotalCents >= BRAND.freeShippingThresholdCents) {
@@ -94,7 +92,6 @@
       }
     }
 
-    // 5. Final grand total
     const grandTotalCents = netSubtotalCents + shippingCents;
 
     return {
@@ -121,12 +118,10 @@
 
     container.appendChild(toast);
 
-    // Trigger reveal transition
     requestAnimationFrame(() => {
       toast.classList.add("is-visible");
     });
 
-    // Auto dismiss after 3.5 seconds
     setTimeout(() => {
       toast.classList.remove("is-visible");
       setTimeout(() => toast.remove(), 400);
@@ -162,7 +157,6 @@
     const totals = calculateCartTotals();
     updateCartBadge();
 
-    // Check if cart is empty
     if (state.cart.length === 0) {
       itemsContainer.innerHTML = "";
       itemsContainer.style.display = "none";
@@ -180,7 +174,7 @@
     emptyView.classList.add("is-hidden");
     footer.style.display = "block";
 
-    // Populate Free Shipping Bar
+    // Free Shipping Progress Fill
     if (progressText && progressFill) {
       if (totals.netSubtotalCents >= BRAND.freeShippingThresholdCents) {
         progressText.textContent = "You've unlocked free shipping";
@@ -195,7 +189,7 @@
       }
     }
 
-    // Render Line Items
+    // Line Items Render
     itemsContainer.innerHTML = state.cart.map((item, index) => {
       const product = PRODUCTS.find(p => p.id === item.productId);
       if (!product) return "";
@@ -206,8 +200,6 @@
         unitPrice = basePrice - Math.round(basePrice * (BRAND.subscriptionDiscountPercent / 100));
       }
       const lineTotal = unitPrice * item.quantity;
-
-      // Small bag thumbnail
       const thumbSvg = generateBagSvg(product, { width: 44, height: 60 });
 
       return `
@@ -231,7 +223,6 @@
       `;
     }).join("");
 
-    // Financial Rows
     if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotalCents);
     
     if (discountRow && discountVal && discountLabel) {
@@ -250,7 +241,6 @@
 
     if (totalEl) totalEl.textContent = formatMoney(totals.grandTotalCents);
 
-    // Notify motion system of cart re-render
     document.dispatchEvent(new CustomEvent("cart:updated", { detail: totals }));
   }
 
@@ -299,7 +289,6 @@
     const product = PRODUCTS.find(p => p.id === productId);
     if (!product) return;
 
-    // Check if line item already exists
     const existingIndex = state.cart.findIndex(
       item => item.productId === productId &&
               item.size === size &&
@@ -324,7 +313,6 @@
     saveCartToStorage();
     renderCartDrawer();
 
-    // Trigger Fly-To-Cart Bezier animation in motion.js
     if (sourceElement) {
       const rect = sourceElement.getBoundingClientRect();
       document.dispatchEvent(new CustomEvent("cart:item-added", {
@@ -338,7 +326,6 @@
 
     showToast(`Added ${product.name} to cart`, "success");
 
-    // Automatically open drawer after slight delay
     setTimeout(() => {
       openCartDrawer();
     }, 450);
@@ -349,11 +336,9 @@
      -------------------------------------------------------------------------- */
   function getFilteredProducts() {
     return PRODUCTS.filter(prod => {
-      // Category Filter
       if (state.activeCategory !== "all" && prod.categorySlug !== state.activeCategory) {
         return false;
       }
-      // Live Search Filter
       if (state.searchQuery.trim() !== "") {
         const q = state.searchQuery.toLowerCase().trim();
         const matchesName = prod.name.toLowerCase().includes(q);
@@ -376,7 +361,7 @@
       if (state.sortOption === "name") {
         return a.name.localeCompare(b.name);
       }
-      return a.id - b.id; // Featured
+      return a.id - b.id;
     });
   }
 
@@ -388,7 +373,6 @@
 
     const filtered = getFilteredProducts();
 
-    // Result count announcement
     if (countLabel) {
       countLabel.textContent = `Showing ${filtered.length} of ${PRODUCTS.length} coffees`;
     }
@@ -431,7 +415,6 @@
       `;
     }).join("");
 
-    // Notify motion system to animate grid stagger
     document.dispatchEvent(new CustomEvent("shop:rendered"));
   }
 
@@ -460,7 +443,6 @@
         effectiveUnitPrice = basePrice - Math.round(basePrice * (BRAND.subscriptionDiscountPercent / 100));
       }
       const totalDisplay = effectiveUnitPrice * quantity;
-
       const bagSvg = generateBagSvg(product, { width: 220, height: 290 });
 
       body.innerHTML = `
@@ -524,7 +506,7 @@
               `}
             </div>
 
-            <!-- Quantity & Final Action -->
+            <!-- Quantity & Add Action -->
             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px; gap: 16px;">
               <div class="cart-item__stepper" style="margin: 0;">
                 <button class="cart-qty-btn" type="button" id="qv-qty-minus" aria-label="Decrease quantity">−</button>
@@ -540,7 +522,6 @@
         </div>
       `;
 
-      // Event bindings for modal options
       body.querySelectorAll('[data-option="size"]').forEach(btn => {
         btn.addEventListener("click", () => {
           selectedSize = btn.dataset.value;
@@ -662,7 +643,6 @@
 
     state.lastActiveElement = document.activeElement;
 
-    // Reset steps
     step1.classList.add("is-active");
     step2.classList.remove("is-active");
     step3.classList.remove("is-active");
@@ -711,7 +691,6 @@
 
     if (!form || !step1 || !step2 || !step3) return;
 
-    // Step 1 Validation & Proceed to Step 2
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -723,7 +702,6 @@
       const stateVal = document.getElementById("checkout-state")?.value.trim().toUpperCase();
       const zip = document.getElementById("checkout-zip")?.value.trim();
 
-      // Email and ZIP basic regex checks
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const zipRegex = /^\d{5}$/;
 
@@ -749,7 +727,6 @@
 
       state.customerInfo = { name, email, phone, address, city, state: stateVal, zip };
 
-      // Render summary in Step 2
       const totals = calculateCartTotals();
       if (summaryBox) {
         summaryBox.innerHTML = `
@@ -779,7 +756,6 @@
           </div>
         `;
 
-        // Inject customer details strictly via textContent (XSS Safe)
         const sName = summaryBox.querySelector("#summary-name");
         const sAddr = summaryBox.querySelector("#summary-address");
         const sContact = summaryBox.querySelector("#summary-contact");
@@ -800,7 +776,6 @@
       });
     }
 
-    // Step 2 Submission (Simulated Demo Order)
     if (submitBtn) {
       submitBtn.addEventListener("click", () => {
         const totals = calculateCartTotals();
@@ -811,24 +786,21 @@
           submitBtn.disabled = false;
           submitBtn.textContent = "Place Demo Order";
 
-          // Generate simulated order identifier
           const orderNumber = `CC-${Math.floor(100000 + Math.random() * 900000)}`;
 
           if (successBox && state.customerInfo) {
             successBox.innerHTML = `
               <p><strong>Order ID:</strong> <span id="conf-order-id"></span></p>
               <p><strong>Recipient:</strong> <span id="conf-name"></span></p>
-              <p><strong>Confirmation Notice:</strong> <span id="conf-email"></span></p>
+              <p><strong>Email on file (demo):</strong> <span id="conf-email"></span></p>
               <p><strong>Items:</strong> ${totals.totalItemCount} &bull; <strong>Total:</strong> ${formatMoney(totals.grandTotalCents)}</p>
             `;
 
-            // Inject strictly with textContent
             successBox.querySelector("#conf-order-id").textContent = orderNumber;
             successBox.querySelector("#conf-name").textContent = state.customerInfo.name;
             successBox.querySelector("#conf-email").textContent = state.customerInfo.email;
           }
 
-          // Clear cart
           state.cart = [];
           state.appliedPromo = null;
           saveCartToStorage();
@@ -849,7 +821,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     10. STATIC DATA DOM INJECTIONS (MARQUEE, PROCESS, REVIEWS, FAQS, STATS)
+     10. STATIC DATA DOM INJECTIONS
      -------------------------------------------------------------------------- */
   function populateMarquee() {
     const track1 = document.getElementById("marquee-track-1");
@@ -857,7 +829,6 @@
     if (!track1 || !track2) return;
 
     const buildTrackHtml = (items) => {
-      // Repeat twice to form endless marquee wrap
       const repeated = [...items, ...items];
       return repeated
         .map(note => `<span class="marquee-item">${note}</span>`)
@@ -870,7 +841,8 @@
 
   function populateFarmToCup() {
     const track = document.getElementById("story-panels-track");
-    if (!track) return;
+    // If panels are already present in static index.html, preserve them!
+    if (!track || track.children.length > 0) return;
 
     track.innerHTML = FARM_TO_CUP_STEPS.map(step => `
       <div class="story-panel" data-step="${step.number}">
@@ -909,7 +881,7 @@
     if (!accordion) return;
 
     accordion.innerHTML = FAQS.map((faq, index) => {
-      const isOpen = index === 0; // First item open by default
+      const isOpen = index === 0;
       return `
         <div class="faq-item ${isOpen ? "is-open" : ""}" data-faq-id="${faq.id}">
           <button class="faq-trigger" type="button" aria-expanded="${isOpen}" aria-controls="panel-${faq.id}" id="trigger-${faq.id}">
@@ -931,7 +903,6 @@
       `;
     }).join("");
 
-    // Accordion Toggle Event Delegation (Single Item Open at a time)
     accordion.addEventListener("click", (e) => {
       const trigger = e.target.closest(".faq-trigger");
       if (!trigger) return;
@@ -939,7 +910,6 @@
       const item = trigger.closest(".faq-item");
       const isCurrentlyOpen = item.classList.contains("is-open");
 
-      // Close all items
       accordion.querySelectorAll(".faq-item").forEach(other => {
         other.classList.remove("is-open");
         const btn = other.querySelector(".faq-trigger");
@@ -948,7 +918,6 @@
         if (pnl) pnl.setAttribute("aria-hidden", "true");
       });
 
-      // If clicked item wasn't open, open it
       if (!isCurrentlyOpen) {
         item.classList.add("is-open");
         trigger.setAttribute("aria-expanded", "true");
@@ -1004,7 +973,6 @@
      12. EVENT LISTENERS & DELEGATION
      -------------------------------------------------------------------------- */
   function setupGlobalListeners() {
-    // Cart open/close triggers
     const navCartBtn = document.getElementById("nav-cart-btn");
     const cartCloseBtn = document.getElementById("cart-close-btn");
     const cartOverlay = document.getElementById("cart-drawer-overlay");
@@ -1015,7 +983,6 @@
     if (cartOverlay) cartOverlay.addEventListener("click", closeCartDrawer);
     if (continueShoppingBtn) continueShoppingBtn.addEventListener("click", closeCartDrawer);
 
-    // Mobile nav drawer open/close
     const mobileToggle = document.getElementById("mobile-menu-toggle");
     const mobileNav = document.getElementById("mobile-nav-drawer");
     const mobileClose = document.getElementById("mobile-nav-close-btn");
@@ -1038,7 +1005,6 @@
       });
     }
 
-    // Close mobile nav on link click
     document.querySelectorAll(".mobile-link").forEach(link => {
       link.addEventListener("click", () => {
         if (mobileNav && mobileToggle) {
@@ -1050,7 +1016,6 @@
       });
     });
 
-    // Cart Steppers & Line Item Actions (Event Delegation)
     const cartItems = document.getElementById("cart-items-container");
     if (cartItems) {
       cartItems.addEventListener("click", (e) => {
@@ -1080,7 +1045,6 @@
       });
     }
 
-    // Promo Code Application (WELCOME10)
     const promoBtn = document.getElementById("promo-apply-btn");
     const promoInput = document.getElementById("promo-input");
     const promoStatus = document.getElementById("promo-status");
@@ -1100,20 +1064,17 @@
       });
     }
 
-    // Open Checkout Trigger
     const checkoutBtn = document.getElementById("open-checkout-btn");
     if (checkoutBtn) {
       checkoutBtn.addEventListener("click", openCheckoutDialog);
     }
 
-    // Quick View and Checkout Modal Close Buttons
     const qvCloseBtn = document.getElementById("quick-view-close-btn");
     if (qvCloseBtn) qvCloseBtn.addEventListener("click", closeQuickView);
 
     const chkCloseBtn = document.getElementById("checkout-close-btn");
     if (chkCloseBtn) chkCloseBtn.addEventListener("click", closeCheckoutDialog);
 
-    // Escape Key Listener to Close Open Modals / Drawers
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         const qvDialog = document.getElementById("quick-view-dialog");
@@ -1130,7 +1091,6 @@
       }
     });
 
-    // Live Product Search
     const searchInput = document.getElementById("shop-search-input");
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
@@ -1139,7 +1099,6 @@
       });
     }
 
-    // Category Filter Chips
     const chipsContainer = document.getElementById("filter-chips-container");
     if (chipsContainer) {
       chipsContainer.addEventListener("click", (e) => {
@@ -1156,7 +1115,6 @@
       });
     }
 
-    // Sort Dropdown
     const sortSelect = document.getElementById("sort-select");
     if (sortSelect) {
       sortSelect.addEventListener("change", (e) => {
@@ -1165,7 +1123,6 @@
       });
     }
 
-    // Reset Filters Button
     const resetBtn = document.getElementById("reset-filters-btn");
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
@@ -1181,7 +1138,6 @@
       });
     }
 
-    // Product Grid Quick Actions (Event Delegation)
     const productGrid = document.getElementById("product-grid");
     if (productGrid) {
       productGrid.addEventListener("click", (e) => {
@@ -1230,7 +1186,7 @@
     if (offenders.length > 0) {
       console.warn(`[Overflow Debugger] Found ${offenders.length} overflowing elements:`, offenders);
     } else {
-      console.log("[Overflow Debugger] No horizontal overflow detected. Clean viewport.");
+      console.log("[Overflow Debugger] Clean viewport: zero horizontal overflow.");
     }
   }
   window.debugOverflow = debugOverflow;
@@ -1239,28 +1195,23 @@
      14. INITIALIZATION SEQUENCE
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
-    // 1. Load initial cart from storage
     state.cart = loadCartFromStorage();
 
-    // 2. Populate static data sections
     populateMarquee();
     populateFarmToCup();
     populateReviews();
     populateFaqs();
     populateStats();
 
-    // 3. Render dynamic interactive views
     renderProductGrid();
     renderCartDrawer();
     setupCheckoutHandlers();
     setupNewsletter();
     setupGlobalListeners();
 
-    // 4. Run safety check for viewport overflow
     setTimeout(debugOverflow, 800);
   });
 
-  // Expose key API methods to window for motion.js integration
   window.cartState = state;
   window.openCartDrawer = openCartDrawer;
   window.closeCartDrawer = closeCartDrawer;
