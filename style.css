@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Stylesheet with Hardware-Accelerated Smooth Scroll Layers
+   Complete Stylesheet with Hardware-Accelerated Smooth Scroll Layers & Legal Policy Modals
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -210,7 +210,6 @@ img {
 
 /* --------------------------------------------------------------------------
    3. SCROLL PROGRESS & STICKY NAVBAR
-   Single line brand wordmark with clamp, responsive mark & cart label
    -------------------------------------------------------------------------- */
 #scroll-progress {
   position: fixed;
@@ -243,16 +242,16 @@ img {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(246, 240, 230, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(246, 240, 230, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: var(--z-nav);
   border-bottom: 1px solid var(--color-border-subtle);
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
   transition: transform var(--dur-med) var(--ease-out-expo);
 }
 .site-header.nav-hidden {
-  transform: translateY(-105%);
+  transform: translateY(-105%) translateZ(0);
 }
 
 .nav-container {
@@ -585,7 +584,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   5. TASTING NOTES MARQUEE TICKER (CONTINUOUS SMOOTH FLOW)
+   5. TASTING NOTES MARQUEE TICKER (CONTINUOUS FLOW)
    -------------------------------------------------------------------------- */
 .marquee-section {
   background-color: var(--color-espresso);
@@ -954,7 +953,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   7. FROM FARM TO CUP (CLEAN PROCESS GRID — NO HORIZONTAL GLITCH)
+   7. FROM FARM TO CUP (SOLID PROCESS GRID)
    -------------------------------------------------------------------------- */
 .story-pinned-section {
   position: relative;
@@ -1052,7 +1051,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. SUBSCRIBE & SAVE SECTION (HARDWARE-ACCELERATED)
+   8. SUBSCRIBE & SAVE SECTION (HARDWARE ACCELERATED)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
@@ -1075,7 +1074,7 @@ img {
   border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;
-  will-change: transform, opacity;
+  will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -1176,7 +1175,7 @@ img {
   backface-visibility: hidden;
 }
 
-/* Counter Row with Content Containment to Prevent Page Reflow Stutter */
+/* Containment layer prevents entire page reflow during number animation */
 .roastery-stats-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -1412,7 +1411,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   13. FOOTER
+   13. FOOTER & LEGAL POLICY LINKS
    -------------------------------------------------------------------------- */
 .site-footer {
   background-color: #1F130D;
@@ -1466,6 +1465,18 @@ img {
   color: var(--color-cream);
 }
 
+.footer-policy-link {
+  color: var(--color-oat);
+  font-size: var(--text-sm);
+  text-align: left;
+  padding: 0;
+  transition: color var(--dur-fast) var(--ease-out-expo);
+}
+.footer-policy-link:hover {
+  color: var(--color-cream);
+  text-decoration: underline;
+}
+
 .footer-disclaimer-band {
   padding-top: var(--space-4);
   border-top: 1px solid rgba(246, 240, 230, 0.08);
@@ -1475,7 +1486,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   14. CART DRAWER (ELEVATED PROCEED BUTTON & 100dvh SECURED)
+   14. CART DRAWER (ELEVATED PROCEED BUTTON)
    -------------------------------------------------------------------------- */
 .cart-drawer-overlay {
   position: fixed;
@@ -1736,7 +1747,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   15. ACCESSIBLE DIALOGS
+   15. ACCESSIBLE DIALOGS & POLICY MODALS
    -------------------------------------------------------------------------- */
 .modal-dialog {
   border: none;
