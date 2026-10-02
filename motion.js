@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
-   120Hz Inertia Scrolling, ScrollTrigger Pinning & Bezier Physics
-   Complete Production Motion Script with 992px+ Breakpoint & Refresh Hooks
+   120Hz Inertia Scrolling, ScrollTrigger Reveals & Bezier Physics
+   Complete Production Motion Script with Solid Vertical Process Reveal
    ========================================================================== */
 
 (function () {
@@ -286,41 +286,26 @@
   }
 
   /* --------------------------------------------------------------------------
-     7. PINNED HORIZONTAL STORY TRACK (BUG 1 FIX: 992px+ EXACT BREAKPOINT)
-     Desktop min-width 992px: Pin & TranslateX
-     Mobile/Tablet (<992px): Normal vertical stacked layout without Pin
+     7. FROM FARM TO CUP REVEAL ANIMATION (CLEAN EDITORIAL PROCESS STAGGER)
+     Zero sideways scroll glitch, zero empty space. Pure vertical rhythm.
      -------------------------------------------------------------------------- */
-  function setupHorizontalStoryTrack() {
-    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+  function setupStorySectionAnimation() {
+    if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    const mm = gsap.matchMedia();
+    const panels = document.querySelectorAll(".story-panel");
+    if (panels.length === 0) return;
 
-    // Desktop view (pinned horizontal scroll for 992px and wider)
-    mm.add("(min-width: 992px)", () => {
-      const track = document.getElementById("story-panels-track");
-      const section = document.getElementById("story-pinned-section");
-      if (!track || !section) return;
-
-      const panels = gsap.utils.toArray(".story-panel");
-      const totalPanels = panels.length;
-      if (totalPanels === 0) return;
-
-      gsap.to(track, {
-        xPercent: -100 * (totalPanels - 1),
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          scrub: 1,
-          snap: 1 / (totalPanels - 1),
-          end: () => "+=" + (track.scrollWidth - window.innerWidth)
-        }
-      });
-    });
-
-    // Mobile & Tablet view: normal vertical stack without pin
-    mm.add("(max-width: 991px)", () => {
-      // Normal vertical flow; panels are already 100% visible via CSS
+    gsap.from(panels, {
+      opacity: 0,
+      y: 40,
+      duration: 0.85,
+      stagger: 0.12,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#story-panels-track",
+        start: "top 82%",
+        toggleActions: "play none none none"
+      }
     });
   }
 
@@ -444,20 +429,18 @@
   }
 
   /* --------------------------------------------------------------------------
-     10. INITIALIZATION & LAYOUT REFRESH HOOKS (BUG 1 FIX)
-     Calls ScrollTrigger.refresh() on window load and after fonts ready
+     10. INITIALIZATION & REFRESH HOOKS
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
     setupSmoothAnchorLinks();
     setupScrollDynamics();
     setupHeroAnimation();
     setupSectionReveals();
-    setupHorizontalStoryTrack();
+    setupStorySectionAnimation();
     setupFlyToCartListener();
     setupMagneticAndCursor();
   });
 
-  // Re-calculate layout after webfonts load
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       if (typeof ScrollTrigger !== "undefined") {
@@ -466,14 +449,12 @@
     });
   }
 
-  // Re-calculate layout after all images & external resources load
   window.addEventListener("load", () => {
     if (typeof ScrollTrigger !== "undefined") {
       ScrollTrigger.refresh();
     }
   });
 
-  // Re-animate grid whenever shop re-renders
   document.addEventListener("shop:rendered", () => {
     animateProductCards();
   });
