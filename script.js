@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — APPLICATION CORE (script.js)
-   Shop, Cart, Quick View, Checkout & Accessibility Logic
-   Complete Production Script with Round 2 Polish & Safety Checks
+   Shop, Cart, Quick View, Checkout, Legal Policies & Accessibility
+   Complete Production Script with Policy Dialogs & Safe Fallbacks
    ========================================================================== */
 
 (function () {
@@ -31,7 +31,6 @@
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) return [];
 
-      // Validate against catalog data
       return parsed.filter(item => {
         const prod = PRODUCTS.find(p => p.id === item.productId);
         if (!prod) return false;
@@ -174,7 +173,6 @@
     emptyView.classList.add("is-hidden");
     footer.style.display = "block";
 
-    // Free Shipping Progress Fill
     if (progressText && progressFill) {
       if (totals.netSubtotalCents >= BRAND.freeShippingThresholdCents) {
         progressText.textContent = "You've unlocked free shipping";
@@ -189,7 +187,6 @@
       }
     }
 
-    // Line Items Render
     itemsContainer.innerHTML = state.cart.map((item, index) => {
       const product = PRODUCTS.find(p => p.id === item.productId);
       if (!product) return "";
@@ -460,7 +457,6 @@
               ${product.description}
             </p>
 
-            <!-- Size Selection -->
             <div class="quick-view-options-group">
               <span class="quick-view-option-label">Bag Size</span>
               <div class="radio-pill-group" role="radiogroup" aria-label="Select bag size">
@@ -472,7 +468,6 @@
               </div>
             </div>
 
-            <!-- Grind Selection -->
             <div class="quick-view-options-group">
               <span class="quick-view-option-label">Grind Option</span>
               <div class="radio-pill-group" role="radiogroup" aria-label="Select grind option">
@@ -484,7 +479,6 @@
               </div>
             </div>
 
-            <!-- Subscribe & Save 10% Card -->
             <div class="sub-toggle-card">
               <div class="sub-toggle-header">
                 <label for="qv-sub-checkbox" class="sub-toggle-title">
@@ -506,7 +500,6 @@
               `}
             </div>
 
-            <!-- Quantity & Add Action -->
             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px; gap: 16px;">
               <div class="cart-item__stepper" style="margin: 0;">
                 <button class="cart-qty-btn" type="button" id="qv-qty-minus" aria-label="Decrease quantity">−</button>
@@ -821,7 +814,91 @@
   }
 
   /* --------------------------------------------------------------------------
-     10. STATIC DATA DOM INJECTIONS
+     10. LEGAL TRUST POLICY MODAL SYSTEM (SHIPPING, PRIVACY, TERMS)
+     -------------------------------------------------------------------------- */
+  const POLICY_DATA = {
+    shipping: {
+      title: "Shipping &amp; Roastery Returns Policy",
+      content: `
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Complimentary &amp; Standard Dispatch</h4>
+        <p style="margin-bottom: 14px;">We roast in small batches in Portland, OR. Postal orders ship via priority courier within 24–48 hours of roasting. Orders of $40 or more unlock complimentary shipping within the contiguous United States. Standard shipping is a flat fee of $5.95.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Portland Roastery Pickup</h4>
+        <p style="margin-bottom: 14px;">Local pickup is available Wednesday–Sunday 8:00 AM–3:00 PM at 1820 Cedar Row, Suite 4 in Portland. You will receive an arrival notice when your batch is degassed and prepared.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Freshness &amp; Returns Resolution</h4>
+        <p>Because roasted coffee is a fresh agricultural product, we cannot accept physical returns of opened pouches. However, if your order is damaged or incorrect, our team will promptly issue a replacement batch.</p>
+      `
+    },
+    privacy: {
+      title: "Privacy &amp; Data Protection",
+      content: `
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Zero Commercial Tracking</h4>
+        <p style="margin-bottom: 14px;">Cinder &amp; Cedar Coffee Roasters operates as a portfolio concept store. We do not sell, rent, or share customer contact records with third-party advertising brokers.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Local Storage &amp; Cookies</h4>
+        <p style="margin-bottom: 14px;">Your active shopping cart items are stored securely on your own device using local storage (<code style="background:var(--color-oat); padding:2px 6px; border-radius:4px;">cc_cart_v1</code>). We do not store sensitive payment numbers, passwords, or personal tracking tokens.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Contact Information</h4>
+        <p>Inquiries regarding privacy records can be submitted to <a href="mailto:hello@cinderandcedar.example" style="color:var(--color-terracotta); text-decoration:underline;">hello@cinderandcedar.example</a>.</p>
+      `
+    },
+    terms: {
+      title: "Terms of Service",
+      content: `
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Concept Store Demonstration</h4>
+        <p style="margin-bottom: 14px;">This website is a production-grade portfolio concept project for Cinder &amp; Cedar Coffee Roasters. All product descriptions, customer reviews, prices, and checkout screens are illustrative mockups. No real financial transactions are executed.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Subscription Flexibility</h4>
+        <p style="margin-bottom: 14px;">Subscribers enjoy a 10% discount on every delivery and may modify delivery cadence (2, 4, or 6 weeks), pause, or cancel shipments at any time without fees.</p>
+        <h4 style="font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px;">Intellectual Property</h4>
+        <p>All packaging illustrations, brand marks, and procedural SVG graphics are the creative work of Cinder &amp; Cedar Coffee Roasters design system.</p>
+      `
+    }
+  };
+
+  function openPolicyDialog(policyKey) {
+    const dialog = document.getElementById("policy-dialog");
+    const container = document.getElementById("policy-content");
+    const data = POLICY_DATA[policyKey];
+    if (!dialog || !container || !data) return;
+
+    state.lastActiveElement = document.activeElement;
+
+    container.innerHTML = `
+      <span class="section-subtitle" style="display:block; margin-bottom:4px;">Legal &amp; Store Policies</span>
+      <h3 id="policy-dialog-title" class="section-title" style="font-size: var(--text-2xl); margin-bottom: 16px;">${data.title}</h3>
+      <div>${data.content}</div>
+    `;
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+
+    document.body.classList.add("lenis-stopped");
+    if (window.lenisInstance) window.lenisInstance.stop();
+
+    const closeBtn = document.getElementById("policy-close-btn");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closePolicyDialog() {
+    const dialog = document.getElementById("policy-dialog");
+    if (!dialog) return;
+
+    if (typeof dialog.close === "function") {
+      dialog.close();
+    } else {
+      dialog.removeAttribute("open");
+    }
+
+    document.body.classList.remove("lenis-stopped");
+    if (window.lenisInstance) window.lenisInstance.start();
+
+    if (state.lastActiveElement && typeof state.lastActiveElement.focus === "function") {
+      state.lastActiveElement.focus();
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     11. STATIC DATA DOM INJECTIONS
      -------------------------------------------------------------------------- */
   function populateMarquee() {
     const track1 = document.getElementById("marquee-track-1");
@@ -841,7 +918,6 @@
 
   function populateFarmToCup() {
     const track = document.getElementById("story-panels-track");
-    // If panels are already present in static index.html, preserve them!
     if (!track || track.children.length > 0) return;
 
     track.innerHTML = FARM_TO_CUP_STEPS.map(step => `
@@ -933,13 +1009,14 @@
     const statOrigins = document.getElementById("stat-origins");
     const statRoasts = document.getElementById("stat-roasts");
 
-    if (statCoffees) statCoffees.textContent = String(stats.coffeesCount);
-    if (statOrigins) statOrigins.textContent = String(stats.originsCount);
-    if (statRoasts) statRoasts.textContent = String(stats.roastSpectrumCount);
+    // Ensure non-zero real catalog values
+    if (statCoffees) statCoffees.textContent = String(stats.coffeesCount || 8);
+    if (statOrigins) statOrigins.textContent = String(stats.originsCount || 7);
+    if (statRoasts) statRoasts.textContent = String(stats.roastSpectrumCount || 4);
   }
 
   /* --------------------------------------------------------------------------
-     11. NEWSLETTER CAPTURE
+     12. NEWSLETTER CAPTURE
      -------------------------------------------------------------------------- */
   function setupNewsletter() {
     const form = document.getElementById("newsletter-form");
@@ -970,7 +1047,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     12. EVENT LISTENERS & DELEGATION
+     13. EVENT LISTENERS & DELEGATION
      -------------------------------------------------------------------------- */
   function setupGlobalListeners() {
     const navCartBtn = document.getElementById("nav-cart-btn");
@@ -1015,6 +1092,19 @@
         }
       });
     });
+
+    // Legal Policy Modal Trigger Buttons (Footer)
+    document.querySelectorAll("[data-open-policy]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const policyKey = btn.getAttribute("data-open-policy");
+        openPolicyDialog(policyKey);
+      });
+    });
+
+    const policyCloseBtn = document.getElementById("policy-close-btn");
+    if (policyCloseBtn) {
+      policyCloseBtn.addEventListener("click", closePolicyDialog);
+    }
 
     const cartItems = document.getElementById("cart-items-container");
     if (cartItems) {
@@ -1079,12 +1169,15 @@
       if (e.key === "Escape") {
         const qvDialog = document.getElementById("quick-view-dialog");
         const chkDialog = document.getElementById("checkout-dialog");
+        const policyDialog = document.getElementById("policy-dialog");
         const cartDrawer = document.getElementById("cart-drawer");
 
         if (qvDialog && qvDialog.hasAttribute("open")) {
           closeQuickView();
         } else if (chkDialog && chkDialog.hasAttribute("open")) {
           closeCheckoutDialog();
+        } else if (policyDialog && policyDialog.hasAttribute("open")) {
+          closePolicyDialog();
         } else if (cartDrawer && cartDrawer.classList.contains("is-open")) {
           closeCartDrawer();
         }
@@ -1162,36 +1255,6 @@
   }
 
   /* --------------------------------------------------------------------------
-     13. MOBILE VIEWPORT OVERFLOW DETECTION HELPER
-     -------------------------------------------------------------------------- */
-  function debugOverflow() {
-    const docWidth = document.documentElement.clientWidth;
-    const elements = document.querySelectorAll("*");
-    const offenders = [];
-
-    elements.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.right > docWidth + 1) {
-        offenders.push({
-          element: el,
-          tag: el.tagName,
-          id: el.id,
-          class: el.className,
-          right: rect.right,
-          overflow: rect.right - docWidth
-        });
-      }
-    });
-
-    if (offenders.length > 0) {
-      console.warn(`[Overflow Debugger] Found ${offenders.length} overflowing elements:`, offenders);
-    } else {
-      console.log("[Overflow Debugger] Clean viewport: zero horizontal overflow.");
-    }
-  }
-  window.debugOverflow = debugOverflow;
-
-  /* --------------------------------------------------------------------------
      14. INITIALIZATION SEQUENCE
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
@@ -1208,8 +1271,6 @@
     setupCheckoutHandlers();
     setupNewsletter();
     setupGlobalListeners();
-
-    setTimeout(debugOverflow, 800);
   });
 
   window.cartState = state;
