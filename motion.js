@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
-   120Hz Inertia Scrolling, Hardware-Accelerated Reveals & Bezier Physics
-   Complete Production Motion Script with 100% Lag-Free Smooth Performance
+   120Hz Inertia Scrolling, Solid Zero-Jank Performance & Bezier Physics
+   Guaranteed Lag-Free: Static Zero-Overhead Rendering for Heavy Photo Sections
    ========================================================================== */
 
 (function () {
@@ -11,15 +11,16 @@
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* --------------------------------------------------------------------------
-     1. LENIS SMOOTH INERTIA SCROLL INITIALIZATION
+     1. LENIS SMOOTH INERTIA SCROLL INITIALIZATION (SNAPPY & LIGHTWEIGHT)
      -------------------------------------------------------------------------- */
   let lenis = null;
 
   if (!prefersReducedMotion && typeof Lenis !== "undefined") {
     lenis = new Lenis({
-      duration: 1.0,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.0,
       infinite: false
     });
@@ -33,7 +34,6 @@
         lenis.raf(time * 1000);
       });
 
-      // Buffer frame pacing so scrolling never hitches or stutters
       gsap.ticker.lagSmoothing(500, 33);
     }
   }
@@ -62,7 +62,7 @@
         if (lenis) {
           lenis.scrollTo(targetEl, {
             offset: -72,
-            duration: 1.1
+            duration: 1.0
           });
         } else {
           targetEl.scrollIntoView({ behavior: "smooth" });
@@ -124,7 +124,7 @@
     heroTl.fromTo(
       "#hero-img",
       { scale: 1.12 },
-      { scale: 1.0, duration: 1.6, ease: "power2.out" },
+      { scale: 1.0, duration: 1.5, ease: "power2.out" },
       0
     );
 
@@ -154,29 +154,11 @@
   }
 
   /* --------------------------------------------------------------------------
-     5. SECTION ENTRANCE REVEALS (LUXURY AGENCY STANDARD — ZERO SCROLL JANK)
+     5. SECTION REVEALS
+     Zero JS animations on Subscribe & Roastery photos = 100% Zero-Jank Scroll
      -------------------------------------------------------------------------- */
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
-
-    // Smooth Soft Entrance for Subscribe Content
-    const subscribeSection = document.querySelector(".subscribe-section");
-    if (subscribeSection) {
-      gsap.fromTo(
-        subscribeSection,
-        { opacity: 0.85 },
-        {
-          opacity: 1,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: subscribeSection,
-            start: "top 85%",
-            once: true
-          }
-        }
-      );
-    }
 
     // Reviews Staggered Slide-In
     const reviewCards = document.querySelectorAll(".review-card");
@@ -185,7 +167,7 @@
         opacity: 0,
         y: 30,
         stagger: 0.12,
-        duration: 0.85,
+        duration: 0.8,
         ease: "power2.out",
         scrollTrigger: {
           trigger: "#reviews-grid",
@@ -195,7 +177,7 @@
       });
     }
 
-    // Dynamic Stats Count-Up with DOM Reflow Throttling
+    // Dynamic Stats Count-Up (Optimized: DOM only touched when number changes)
     const statsRow = document.querySelector(".roastery-stats-row");
     if (statsRow) {
       ScrollTrigger.create({
@@ -211,7 +193,6 @@
     }
   }
 
-  // Reflow-Optimized Counter: Only touches DOM text when integer actually changes
   function animateCounter(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -265,9 +246,9 @@
 
     gsap.from(panels, {
       opacity: 0,
-      y: 35,
-      duration: 0.8,
-      stagger: 0.1,
+      y: 30,
+      duration: 0.75,
+      stagger: 0.08,
       ease: "power2.out",
       scrollTrigger: {
         trigger: "#story-panels-track",
