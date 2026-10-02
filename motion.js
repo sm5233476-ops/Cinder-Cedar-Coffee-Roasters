@@ -33,7 +33,7 @@
         lenis.raf(time * 1000);
       });
 
-      // Buffer frame pacing so scrolling never hitches
+      // Buffer frame pacing so scrolling never hitches or stutters
       gsap.ticker.lagSmoothing(500, 33);
     }
   }
@@ -155,7 +155,7 @@
 
   /* --------------------------------------------------------------------------
      5. SECTION ENTRANCE REVEALS (ZERO JANK / ZERO SCROLL CONFLICT)
-     One-time GPU-accelerated reveals eliminate scroll stutter on laptops.
+     Hardware-accelerated entrance animations eliminate laptop scroll stutter.
      -------------------------------------------------------------------------- */
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
