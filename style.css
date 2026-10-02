@@ -1,8 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Production Stylesheet with Continuous Marquee, Lifted Cart CTA,
-   and Clean Editorial Story Process Grid (No Glitchy Side-Scroll)
+   Complete Stylesheet with Hardware-Accelerated Smooth Scroll Layers
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -586,7 +585,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   5. TASTING NOTES MARQUEE TICKER (CONTINUOUS SMOOTH FLOW - NO HOVER PAUSE)
+   5. TASTING NOTES MARQUEE TICKER (CONTINUOUS SMOOTH FLOW)
    -------------------------------------------------------------------------- */
 .marquee-section {
   background-color: var(--color-espresso);
@@ -626,8 +625,6 @@ img {
 .marquee-row-2 .marquee-track {
   animation: marquee-scroll-right 36s linear infinite;
 }
-
-/* Hover pause removed to keep natural non-stop continuous motion */
 
 @keyframes marquee-scroll-left {
   0% { transform: translate3d(0, 0, 0); }
@@ -957,8 +954,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   7. FROM FARM TO CUP (CLEAN EDITORIAL PROCESS GRID — ZERO HORIZONTAL GLITCH)
-   No confusing sideways scroll or empty beige spaces; beautiful solid layout
+   7. FROM FARM TO CUP (CLEAN PROCESS GRID — NO HORIZONTAL GLITCH)
    -------------------------------------------------------------------------- */
 .story-pinned-section {
   position: relative;
@@ -1056,7 +1052,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. SUBSCRIBE & SAVE SECTION
+   8. SUBSCRIBE & SAVE SECTION (HARDWARE-ACCELERATED)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
@@ -1079,11 +1075,17 @@ img {
   border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .subscribe-img {
   width: 100%;
   height: clamp(340px, 45vw, 540px);
   object-fit: cover;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .subscribe-benefits-list {
@@ -1123,7 +1125,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS
+   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (GPU-ISOLATED)
    -------------------------------------------------------------------------- */
 .roastery-section {
   position: relative;
@@ -1146,12 +1148,18 @@ img {
 .roastery-images-composite {
   position: relative;
   min-height: 420px;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .roastery-photo-main {
   width: 82%;
   height: 380px;
   object-fit: cover;
   border-radius: var(--radius-xl);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .roastery-photo-accent {
   position: absolute;
@@ -1163,8 +1171,12 @@ img {
   border-radius: var(--radius-lg);
   border: 6px solid var(--color-cream);
   box-shadow: 0 20px 40px rgba(42, 26, 18, 0.12);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
+/* Counter Row with Content Containment to Prevent Page Reflow Stutter */
 .roastery-stats-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -1173,6 +1185,7 @@ img {
   color: var(--color-cream);
   padding: var(--space-6) var(--space-5);
   border-radius: var(--radius-xl);
+  contain: content;
 }
 @media (min-width: 640px) {
   .roastery-stats-row {
@@ -1462,8 +1475,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   14. CART DRAWER (LIFTED PROCEED BUTTON & 100dvh SECURED)
-   Flex column with middle scroll & elevated bottom checkout button
+   14. CART DRAWER (ELEVATED PROCEED BUTTON & 100dvh SECURED)
    -------------------------------------------------------------------------- */
 .cart-drawer-overlay {
   position: fixed;
@@ -1552,7 +1564,6 @@ img {
   transition: transform var(--dur-med) var(--ease-out-expo);
 }
 
-/* Middle Scrolling Container */
 .cart-items-container {
   flex: 1 1 0;
   min-height: 0;
@@ -1657,7 +1668,6 @@ img {
   display: none;
 }
 
-/* Footer Pinned with Extra Bottom Clearance for Navigation Bars */
 .cart-footer {
   padding: 20px 24px;
   padding-bottom: max(36px, calc(env(safe-area-inset-bottom) + 18px));
@@ -1726,7 +1736,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   15. ACCESSIBLE DIALOGS (ZERO OVERFLOW, 2fr 1fr 1fr GRID)
+   15. ACCESSIBLE DIALOGS
    -------------------------------------------------------------------------- */
 .modal-dialog {
   border: none;
