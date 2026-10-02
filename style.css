@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Stylesheet with 100% Native-Paced, Stutter-Free Image Layouts
+   Complete Stylesheet with Hardware-Optimized Zero-Lag Rendering
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -1050,7 +1050,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. SUBSCRIBE & SAVE SECTION (ZERO LAYER CLIPPING JANK)
+   8. SUBSCRIBE & SAVE SECTION (NATIVE CLEAN LAYOUT — ZERO CLIPPING)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
@@ -1117,7 +1117,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (CLEAN STACKING CONTEXT)
+   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (CLEAN SHADOW & PADDING)
    -------------------------------------------------------------------------- */
 .roastery-section {
   position: relative;
@@ -1156,7 +1156,7 @@ img {
   object-fit: cover;
   border-radius: var(--radius-lg);
   border: 5px solid var(--color-cream);
-  box-shadow: 0 8px 24px rgba(42, 26, 18, 0.08); /* Clean shadow prevents GPU stalls */
+  box-shadow: 0 6px 18px rgba(42, 26, 18, 0.08);
 }
 
 .roastery-stats-row {
@@ -1963,7 +1963,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   17. MAGNETIC CURSOR FOLLOWER (POINTER DEVICES ONLY)
+   17. MAGNETIC CURSOR FOLLOWER (BUG FIX: NO TRANSFORM TRANSITION FIGHT)
    -------------------------------------------------------------------------- */
 .custom-cursor {
   display: none;
@@ -1982,7 +1982,8 @@ img {
     z-index: var(--z-cursor);
     transform: translate(-50%, -50%);
     opacity: 0;
-    transition: opacity var(--dur-fast) var(--ease-out-expo), transform 80ms linear;
+    /* Only transition opacity; transform is handled strictly by GSAP to eliminate layout thrash */
+    transition: opacity var(--dur-fast) var(--ease-out-expo);
   }
 }
 
