@@ -154,26 +154,24 @@
   }
 
   /* --------------------------------------------------------------------------
-     5. SECTION ENTRANCE REVEALS (ZERO JANK / ZERO SCROLL CONFLICT)
-     Hardware-accelerated entrance animations eliminate laptop scroll stutter.
+     5. SECTION ENTRANCE REVEALS (LUXURY AGENCY STANDARD — ZERO SCROLL JANK)
      -------------------------------------------------------------------------- */
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Smooth Entrance Reveal for Subscribe Photo
-    const subscribeMedia = document.querySelector(".subscribe-media");
-    if (subscribeMedia) {
+    // Smooth Soft Entrance for Subscribe Content
+    const subscribeSection = document.querySelector(".subscribe-section");
+    if (subscribeSection) {
       gsap.fromTo(
-        subscribeMedia,
-        { opacity: 0, y: 40 },
+        subscribeSection,
+        { opacity: 0.85 },
         {
           opacity: 1,
-          y: 0,
-          duration: 0.9,
+          duration: 0.8,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: subscribeMedia,
-            start: "top 82%",
+            trigger: subscribeSection,
+            start: "top 85%",
             once: true
           }
         }
@@ -185,7 +183,7 @@
     if (reviewCards.length > 0) {
       gsap.from(reviewCards, {
         opacity: 0,
-        y: 35,
+        y: 30,
         stagger: 0.12,
         duration: 0.85,
         ease: "power2.out",
@@ -197,48 +195,7 @@
       });
     }
 
-    // Roastery Photos Smooth Entrance (No Continuous Scrubbing = Zero Lag)
-    const photoMain = document.querySelector(".roastery-photo-main");
-    const photoAccent = document.querySelector(".roastery-photo-accent");
-
-    if (photoMain) {
-      gsap.fromTo(
-        photoMain,
-        { opacity: 0, y: 35 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".roastery-images-composite",
-            start: "top 80%",
-            once: true
-          }
-        }
-      );
-    }
-
-    if (photoAccent) {
-      gsap.fromTo(
-        photoAccent,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.0,
-          delay: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".roastery-images-composite",
-            start: "top 80%",
-            once: true
-          }
-        }
-      );
-    }
-
-    // Dynamic Stats Count-Up
+    // Dynamic Stats Count-Up with DOM Reflow Throttling
     const statsRow = document.querySelector(".roastery-stats-row");
     if (statsRow) {
       ScrollTrigger.create({
@@ -254,6 +211,7 @@
     }
   }
 
+  // Reflow-Optimized Counter: Only touches DOM text when integer actually changes
   function animateCounter(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -262,10 +220,13 @@
 
     gsap.to(obj, {
       val: target,
-      duration: 1.4,
+      duration: 1.2,
       ease: "power2.out",
       onUpdate: () => {
-        el.textContent = String(Math.floor(obj.val));
+        const current = String(Math.floor(obj.val));
+        if (el.textContent !== current) {
+          el.textContent = current;
+        }
       }
     });
   }
