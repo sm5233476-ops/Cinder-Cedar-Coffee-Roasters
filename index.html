@@ -6,6 +6,9 @@
   <title>Cinder &amp; Cedar Coffee Roasters — Small-Batch Specialty Coffee</title>
   <meta name="description" content="Small-batch specialty coffee roasters based in Portland, Oregon. Thoughtfully roasted single origins and signature blends delivered fresh to your door.">
 
+  <!-- Brand Favicon: Cinder & Cedar Tree Icon in Espresso & Terracotta -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232A1A12'/%3E%3Cpath d='M16 5L7 21H25L16 5Z' fill='%23C2512A'/%3E%3Cpath d='M16 10L10 21H22L16 10Z' fill='%23F6F0E6'/%3E%3Ccircle cx='16' cy='23' r='2.5' fill='%23C2512A'/%3E%3C/svg%3E">
+
   <!-- Google Fonts: Fraunces (Editorial Serif) & DM Sans (Modern Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,7 +58,7 @@
 
       <!-- Navbar Action Controls -->
       <div class="nav-actions">
-        <!-- Live Shop Search Trigger (Accessible Name Updated) -->
+        <!-- Live Shop Search Trigger -->
         <a href="#shop-section" id="nav-search-btn" class="nav-btn-icon" aria-label="Search coffees" data-scroll-to="#shop-section">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
@@ -112,7 +115,6 @@
          ====================================================================== -->
     <section id="hero-section" class="hero-section" aria-labelledby="hero-title">
       <div class="hero-media-wrapper reveal-curtain">
-        <!-- Hero photo: Exactly hero.jpg with neutral alt text -->
         <img id="hero-img" class="hero-img" src="hero.jpg" alt="Pour-over coffee being brewed" width="1920" height="1080" fetchpriority="high" decoding="sync" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1A0F0A 100%)';this.style.display='none';">
         <div class="hero-overlay" aria-hidden="true"></div>
       </div>
@@ -133,17 +135,11 @@
          ====================================================================== -->
     <section class="marquee-section" aria-label="Coffee Tasting Profiles">
       <div class="marquee-wrapper">
-        <!-- Row 1: Leftward Marquee -->
         <div class="marquee-track-container marquee-row-1" aria-hidden="true">
-          <div class="marquee-track" id="marquee-track-1">
-            <!-- Dynamically populated from data.js -->
-          </div>
+          <div class="marquee-track" id="marquee-track-1"></div>
         </div>
-        <!-- Row 2: Rightward Marquee -->
         <div class="marquee-track-container marquee-row-2" aria-hidden="true">
-          <div class="marquee-track" id="marquee-track-2">
-            <!-- Dynamically populated from data.js -->
-          </div>
+          <div class="marquee-track" id="marquee-track-2"></div>
         </div>
       </div>
     </section>
@@ -158,10 +154,8 @@
           <h2 id="shop-heading" class="section-title">The Coffee Roster</h2>
         </div>
 
-        <!-- Shop Live Filters & Controls -->
         <div class="shop-controls">
           <div class="shop-controls-top">
-            <!-- Live Search Input -->
             <div class="search-input-wrapper">
               <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -170,7 +164,6 @@
               <input type="search" id="shop-search-input" class="shop-search-input" placeholder="Search by origin, note, or roast..." aria-label="Search coffees by name, origin, or flavor note">
             </div>
 
-            <!-- Sort Select -->
             <div class="sort-select-wrapper">
               <label for="sort-select" class="sort-label">Sort by</label>
               <select id="sort-select" class="sort-select" aria-label="Sort coffees">
@@ -182,7 +175,6 @@
             </div>
           </div>
 
-          <!-- Category Filter Chips -->
           <div id="filter-chips-container" class="filter-chips-container" role="toolbar" aria-label="Filter coffees by category">
             <button class="filter-chip" type="button" data-category="all" aria-pressed="true">All Coffees</button>
             <button class="filter-chip" type="button" data-category="single-origin" aria-pressed="false">Single Origin</button>
@@ -191,19 +183,14 @@
             <button class="filter-chip" type="button" data-category="gift-sets" aria-pressed="false">Gift Sets</button>
           </div>
 
-          <!-- Live Result Count Feedback -->
           <div class="shop-status-bar">
             <span id="shop-result-count" aria-live="polite">Showing all 8 coffees</span>
             <span>All coffee ships in resealable degassing valve pouches</span>
           </div>
         </div>
 
-        <!-- Product Grid (Populated dynamically via script.js using Procedural SVGs) -->
-        <div id="product-grid" class="product-grid" aria-live="polite">
-          <!-- Coffee cards injected here -->
-        </div>
+        <div id="product-grid" class="product-grid" aria-live="polite"></div>
 
-        <!-- Empty State View -->
         <div id="shop-empty-state" class="shop-empty-state is-hidden" role="status">
           <h3>No coffees found</h3>
           <p>Try refining your search terms or clearing your category filters.</p>
@@ -213,8 +200,7 @@
     </section>
 
     <!-- ======================================================================
-         SECTION 5: FROM FARM TO CUP (PINNED HORIZONTAL ON DESKTOP)
-         Real Static Semantic Markup: visible by default, no blank delay
+         SECTION 5: FROM FARM TO CUP (CLEAN PROCESS GRID)
          ====================================================================== -->
     <section id="story-pinned-section" class="story-pinned-section" aria-labelledby="story-heading">
       <div class="container story-section-header">
@@ -222,9 +208,7 @@
         <h2 id="story-heading" class="section-title">From Farm to Cup</h2>
       </div>
 
-      <!-- 4 Semantic Panels rendered statically for rock-solid stability -->
       <div id="story-panels-track" class="story-panels-track">
-        <!-- Panel 01: Source -->
         <div class="story-panel" data-step="01">
           <div class="story-panel-inner">
             <div class="story-panel__number">01</div>
@@ -241,7 +225,6 @@
           </div>
         </div>
 
-        <!-- Panel 02: Roast -->
         <div class="story-panel" data-step="02">
           <div class="story-panel-inner">
             <div class="story-panel__number">02</div>
@@ -257,7 +240,6 @@
           </div>
         </div>
 
-        <!-- Panel 03: Rest -->
         <div class="story-panel" data-step="03">
           <div class="story-panel-inner">
             <div class="story-panel__number">03</div>
@@ -273,7 +255,6 @@
           </div>
         </div>
 
-        <!-- Panel 04: Brew -->
         <div class="story-panel" data-step="04">
           <div class="story-panel-inner">
             <div class="story-panel__number">04</div>
@@ -298,12 +279,10 @@
     <section id="subscribe-section" class="section-cream section-spacing subscribe-section" aria-labelledby="subscribe-heading">
       <div class="container">
         <div class="subscribe-grid">
-          <!-- Packaging Photo: Exactly subscribe.jpg with neutral alt text -->
           <div class="subscribe-media reveal-curtain">
             <img class="subscribe-img" src="subscribe.jpg" alt="Coffee bag packaging" width="800" height="960" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
           </div>
 
-          <!-- Subscription Copy & Benefits -->
           <div class="subscribe-content">
             <span class="section-subtitle">Subscription Program</span>
             <h2 id="subscribe-heading" class="section-title">Fresh Roasts on Your Schedule</h2>
@@ -355,14 +334,12 @@
             </div>
           </div>
 
-          <!-- Dual Parallax Photo Composite: roastery.jpg & beans.jpg with neutral alt texts -->
           <div class="roastery-images-composite">
             <img class="roastery-photo-main" src="roastery.jpg" alt="Coffee roastery interior" width="960" height="640" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
             <img class="roastery-photo-accent" src="beans.jpg" alt="Roasted coffee beans close up" width="600" height="450" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #3D271D 100%)';this.style.display='none';">
           </div>
         </div>
 
-        <!-- 3 Stats Counters dynamically computed from PRODUCTS in data.js -->
         <div class="roastery-stats-row">
           <div class="stat-item">
             <div id="stat-coffees" class="stat-number" data-stat="coffees">0</div>
@@ -391,10 +368,7 @@
           <p style="font-size: var(--text-sm); color: var(--color-espresso-subtle); margin-top: 6px;">Sample customer reviews for this portfolio concept.</p>
         </div>
 
-        <!-- Populated dynamically from SAMPLE_REVIEWS in data.js -->
-        <div id="reviews-grid" class="reviews-grid">
-          <!-- Injected via script.js -->
-        </div>
+        <div id="reviews-grid" class="reviews-grid"></div>
       </div>
     </section>
 
@@ -408,10 +382,7 @@
           <h2 id="faq-heading" class="section-title">Frequently Asked Questions</h2>
         </div>
 
-        <!-- 6 Questions populated dynamically from FAQS (First open by default) -->
-        <div id="faq-accordion" class="faq-accordion">
-          <!-- Injected via script.js -->
-        </div>
+        <div id="faq-accordion" class="faq-accordion"></div>
       </div>
     </section>
 
@@ -420,7 +391,6 @@
          ====================================================================== -->
     <section class="newsletter-section section-spacing" aria-labelledby="newsletter-heading">
       <div class="newsletter-media-bg" aria-hidden="true">
-        <!-- Morning photo: Exactly morning.jpg with neutral alt text -->
         <img src="morning.jpg" alt="Cup of coffee by a window in morning light" width="1600" height="900" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1F130D 100%)';this.style.display='none';">
       </div>
 
@@ -439,19 +409,17 @@
   </main>
 
   <!-- ========================================================================
-       SECTION 11: SITE FOOTER (BRAND, CONTACT, HOURS & CONCEPT DISCLAIMER)
+       SECTION 11: SITE FOOTER
        ======================================================================== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
-        <!-- Column 1: Brand Info -->
         <div class="footer-col-brand">
           <div class="brand-wordmark">Cinder <span>&amp;</span> Cedar</div>
           <p>Small-batch specialty coffee roasters dedicated to sweet, nuanced profiles and transparent farm partnerships.</p>
           <p style="margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-oat-dark);">1820 Cedar Row, Suite 4<br>Portland, OR 97214</p>
         </div>
 
-        <!-- Column 2: Roastery Hours & Contact -->
         <div class="footer-col-contact">
           <div class="footer-col-title">Roastery Pickup &amp; Bar</div>
           <ul class="footer-contact-list">
@@ -461,7 +429,6 @@
           </ul>
         </div>
 
-        <!-- Column 3: Quick Navigation -->
         <div class="footer-col-links">
           <div class="footer-col-title">Navigation</div>
           <ul class="footer-links-list">
@@ -474,7 +441,6 @@
         </div>
       </div>
 
-      <!-- Mandatory Concept Project Disclaimer Band -->
       <div class="footer-disclaimer-band">
         <p>Portfolio concept project. Cinder &amp; Cedar Coffee Roasters is a fictional company; all products, reviews, prices and details are illustrative. No payments are processed.</p>
       </div>
@@ -482,7 +448,7 @@
   </footer>
 
   <!-- ========================================================================
-       SHOPPING CART DRAWER (SLIDES IN FROM RIGHT, DVH & SAFE-AREA SECURED)
+       SHOPPING CART DRAWER
        ======================================================================== -->
   <div id="cart-drawer-overlay" class="cart-drawer-overlay" tabindex="-1" aria-hidden="true"></div>
 
@@ -497,7 +463,6 @@
       </button>
     </div>
 
-    <!-- Free Shipping Progress Bar -->
     <div class="shipping-progress-box">
       <div id="shipping-progress-text" class="shipping-progress-label">Add $40.00 to unlock free shipping</div>
       <div class="shipping-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
@@ -505,28 +470,21 @@
       </div>
     </div>
 
-    <!-- Cart Line Items Rack (Middle Scrolling Container) -->
-    <div id="cart-items-container" class="cart-items-container">
-      <!-- Items dynamically populated via script.js -->
-    </div>
+    <div id="cart-items-container" class="cart-items-container"></div>
 
-    <!-- Cart Empty State View -->
     <div id="cart-empty-view" class="cart-empty-view is-hidden">
       <p style="font-family: var(--font-display); font-size: var(--text-lg); margin-bottom: 8px;">Your cart is empty</p>
       <p style="font-size: var(--text-sm); color: var(--color-espresso-subtle); margin-bottom: 20px;">Explore our small-batch roasts and find your next morning brew.</p>
       <button id="cart-continue-shopping-btn" class="btn btn-secondary-dark" type="button">Continue Shopping</button>
     </div>
 
-    <!-- Cart Totals & Checkout Trigger (Pinned to Bottom) -->
     <div id="cart-footer" class="cart-footer">
-      <!-- Promo Code Input -->
       <div class="promo-box">
         <input type="text" id="promo-input" class="promo-input" placeholder="Promo code (WELCOME10)" aria-label="Enter promotional discount code">
         <button type="button" id="promo-apply-btn" class="promo-apply-btn">Apply</button>
       </div>
       <div id="promo-status" class="promo-status" aria-live="polite"></div>
 
-      <!-- Financial Calculation Rows -->
       <div class="cart-totals-table">
         <div class="cart-total-row">
           <span>Subtotal</span>
@@ -551,7 +509,7 @@
   </aside>
 
   <!-- ========================================================================
-       QUICK VIEW ACCESSIBLE DIALOG
+       QUICK VIEW DIALOG
        ======================================================================== -->
   <dialog id="quick-view-dialog" class="modal-dialog" aria-modal="true" aria-labelledby="quick-view-title">
     <div class="dialog-window">
@@ -561,14 +519,12 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <div id="quick-view-body">
-        <!-- Dynamically injected via script.js -->
-      </div>
+      <div id="quick-view-body"></div>
     </div>
   </dialog>
 
   <!-- ========================================================================
-       2-STEP DEMO CHECKOUT ACCESSIBLE DIALOG (STRICT ZERO-OVERFLOW FORM)
+       2-STEP DEMO CHECKOUT DIALOG
        ======================================================================== -->
   <dialog id="checkout-dialog" class="modal-dialog" aria-modal="true" aria-labelledby="checkout-dialog-title">
     <div class="dialog-window checkout-window">
@@ -579,7 +535,6 @@
         </svg>
       </button>
 
-      <!-- Step 1: Customer Contact & Shipping Details -->
       <div id="checkout-step-1" class="checkout-step is-active">
         <span class="section-subtitle">Step 1 of 2</span>
         <h3 id="checkout-dialog-title" class="section-title" style="font-size: var(--text-2xl);">Shipping Details</h3>
@@ -604,7 +559,6 @@
               <input type="text" id="checkout-address" class="form-input" required placeholder="420 Hawthorne Blvd">
             </div>
 
-            <!-- Unified City / State / ZIP Grid Row (2fr 1fr 1fr, no overflow) -->
             <div class="form-row-city-state-zip form-col-full">
               <div class="form-group">
                 <label for="checkout-city" class="form-label">City</label>
@@ -624,7 +578,6 @@
         </form>
       </div>
 
-      <!-- Step 2: Order Review & Demo Confirmation Trigger -->
       <div id="checkout-step-2" class="checkout-step">
         <span class="section-subtitle">Step 2 of 2</span>
         <h3 class="section-title" style="font-size: var(--text-2xl);">Order Review</h3>
@@ -633,9 +586,7 @@
           <strong>Demo checkout:</strong> No payment is collected and nothing is charged. No credit card information is required.
         </div>
 
-        <div id="checkout-summary-box" style="margin-bottom: var(--space-4); font-size: var(--text-sm);">
-          <!-- Summary injected dynamically -->
-        </div>
+        <div id="checkout-summary-box" style="margin-bottom: var(--space-4); font-size: var(--text-sm);"></div>
 
         <div style="display: flex; gap: 10px;">
           <button id="checkout-back-btn" class="btn btn-secondary-dark" type="button" style="flex: 1;">Back</button>
@@ -643,15 +594,12 @@
         </div>
       </div>
 
-      <!-- Step 3: Real Confirmation View (Updated Eyebrow: "Demo order") -->
       <div id="checkout-step-3" class="checkout-step">
         <span class="section-subtitle" style="color: var(--color-success);">Demo order</span>
         <h3 class="section-title" style="font-size: var(--text-2xl);">Order Request Received (Demo)</h3>
         <p style="font-size: var(--text-sm); margin-top: 8px; margin-bottom: 16px;">Thank you for testing the Cinder &amp; Cedar concept store.</p>
         
-        <div id="checkout-success-details" style="background-color: var(--color-oat); padding: 16px; border-radius: var(--radius-md); font-size: var(--text-sm); margin-bottom: 20px;">
-          <!-- Dynamically populated with real entered name and email -->
-        </div>
+        <div id="checkout-success-details" style="background-color: var(--color-oat); padding: 16px; border-radius: var(--radius-md); font-size: var(--text-sm); margin-bottom: 20px;"></div>
 
         <button id="checkout-finish-btn" class="btn btn-primary" type="button" style="width: 100%;">Back to Roastery</button>
       </div>
@@ -659,26 +607,19 @@
   </dialog>
 
   <!-- ========================================================================
-       ACCESSIBLE TOAST NOTIFICATIONS (BOTTOM-CENTER SHELF ONLY)
+       ACCESSIBLE TOAST NOTIFICATIONS
        ======================================================================== -->
   <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
-  <!-- ========================================================================
-       SCRIPTS IN EXACT REQUIRED ORDER
-       ======================================================================== -->
-  <!-- GSAP & ScrollTrigger -->
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-  <!-- Lenis Smooth Scroll -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.18/lenis.min.js"></script>
   <script>
     if (typeof Lenis === 'undefined') {
       document.write('<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"><\/script>');
     }
   </script>
-
-  <!-- Project Scripts -->
   <script src="data.js"></script>
   <script src="script.js"></script>
   <script src="motion.js"></script>
