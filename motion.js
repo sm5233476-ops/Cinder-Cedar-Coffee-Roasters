@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
-   120Hz Inertia Scrolling, Damped Parallax & Hardware-Optimized Physics
-   Complete Production Motion Script with Ultra-Smooth Non-Jank Scrolling
+   120Hz Inertia Scrolling, Hardware-Accelerated Reveals & Bezier Physics
+   Complete Production Motion Script with 100% Lag-Free Smooth Performance
    ========================================================================== */
 
 (function () {
@@ -17,10 +17,10 @@
 
   if (!prefersReducedMotion && typeof Lenis !== "undefined") {
     lenis = new Lenis({
-      duration: 1.15,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.2,
+      touchMultiplier: 1.0,
       infinite: false
     });
 
@@ -33,7 +33,7 @@
         lenis.raf(time * 1000);
       });
 
-      // Buffer micro-drops so scrolling never hitches or stutters
+      // Buffer frame pacing so scrolling never hitches
       gsap.ticker.lagSmoothing(500, 33);
     }
   }
@@ -62,7 +62,7 @@
         if (lenis) {
           lenis.scrollTo(targetEl, {
             offset: -72,
-            duration: 1.2
+            duration: 1.1
           });
         } else {
           targetEl.scrollIntoView({ behavior: "smooth" });
@@ -84,7 +84,7 @@
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.2
+        scrub: 0.15
       }
     });
 
@@ -118,77 +118,67 @@
     heroTl.fromTo(
       ".hero-media-wrapper",
       { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
-      { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.3 }
+      { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.2 }
     );
 
     heroTl.fromTo(
       "#hero-img",
-      { scale: 1.15 },
-      { scale: 1.0, duration: 1.8, ease: "power2.out" },
+      { scale: 1.12 },
+      { scale: 1.0, duration: 1.6, ease: "power2.out" },
       0
     );
 
     heroTl.from(
       ".hero-badge",
       { opacity: 0, y: 20, duration: 0.8 },
-      0.4
+      0.35
     );
 
     heroTl.from(
       "#hero-title",
-      { opacity: 0, y: 35, duration: 1.0 },
-      0.55
+      { opacity: 0, y: 35, duration: 0.9 },
+      0.5
     );
 
     heroTl.from(
       "#hero-subtext",
-      { opacity: 0, y: 25, duration: 0.9 },
-      0.75
+      { opacity: 0, y: 25, duration: 0.8 },
+      0.7
     );
 
     heroTl.from(
       "#hero-actions .btn",
       { opacity: 0, y: 20, stagger: 0.1, duration: 0.8 },
-      0.9
+      0.85
     );
-
-    gsap.to("#hero-img", {
-      yPercent: 16,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#hero-section",
-        start: "top top",
-        end: "bottom top",
-        scrub: 0.5
-      }
-    });
   }
 
   /* --------------------------------------------------------------------------
-     5. SECTION REVEALS & DAMPED PARALLAX (ELIMINATES SCROLL JANK)
+     5. SECTION ENTRANCE REVEALS (ZERO JANK / ZERO SCROLL CONFLICT)
+     One-time GPU-accelerated reveals eliminate scroll stutter on laptops.
      -------------------------------------------------------------------------- */
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Curtain reveal on subscribe photo with fastScrollEnd protection
-    document.querySelectorAll(".reveal-curtain:not(.hero-media-wrapper)").forEach((curtain) => {
+    // Smooth Entrance Reveal for Subscribe Photo
+    const subscribeMedia = document.querySelector(".subscribe-media");
+    if (subscribeMedia) {
       gsap.fromTo(
-        curtain,
-        { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", opacity: 0.8 },
+        subscribeMedia,
+        { opacity: 0, y: 40 },
         {
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
           opacity: 1,
-          duration: 1.0,
+          y: 0,
+          duration: 0.9,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: curtain,
-            start: "top 85%",
-            toggleActions: "play none none none",
-            fastScrollEnd: true
+            trigger: subscribeMedia,
+            start: "top 82%",
+            once: true
           }
         }
       );
-    });
+    }
 
     // Reviews Staggered Slide-In
     const reviewCards = document.querySelectorAll(".review-card");
@@ -201,39 +191,51 @@
         ease: "power2.out",
         scrollTrigger: {
           trigger: "#reviews-grid",
-          start: "top 80%"
+          start: "top 80%",
+          once: true
         }
       });
     }
 
-    // Roastery Dual Photo Parallax with Damped Smooth Scrub (No Stutter)
+    // Roastery Photos Smooth Entrance (No Continuous Scrubbing = Zero Lag)
     const photoMain = document.querySelector(".roastery-photo-main");
     const photoAccent = document.querySelector(".roastery-photo-accent");
 
     if (photoMain) {
-      gsap.to(photoMain, {
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".roastery-images-composite",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.6 // Smooth damping avoids raw mousewheel jumping
+      gsap.fromTo(
+        photoMain,
+        { opacity: 0, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".roastery-images-composite",
+            start: "top 80%",
+            once: true
+          }
         }
-      });
+      );
     }
 
     if (photoAccent) {
-      gsap.to(photoAccent, {
-        yPercent: -18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".roastery-images-composite",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.8 // Damped fluid float
+      gsap.fromTo(
+        photoAccent,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.0,
+          delay: 0.15,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".roastery-images-composite",
+            start: "top 80%",
+            once: true
+          }
         }
-      });
+      );
     }
 
     // Dynamic Stats Count-Up
@@ -309,7 +311,7 @@
       scrollTrigger: {
         trigger: "#story-panels-track",
         start: "top 82%",
-        toggleActions: "play none none none"
+        once: true
       }
     });
   }
