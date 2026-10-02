@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Stylesheet with Zero-Jank Image Performance & GPU Layer Optimization
+   Complete Stylesheet with 100% Native-Paced, Stutter-Free Image Layouts
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -246,11 +246,11 @@ img {
   background-color: rgba(246, 240, 230, 0.98);
   z-index: var(--z-nav);
   border-bottom: 1px solid var(--color-border-subtle);
-  transform: translateY(0) translateZ(0);
+  transform: translateY(0);
   transition: transform var(--dur-med) var(--ease-out-expo);
 }
 .site-header.nav-hidden {
-  transform: translateY(-105%) translateZ(0);
+  transform: translateY(-105%);
 }
 
 .nav-container {
@@ -1050,11 +1050,10 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. SUBSCRIBE & SAVE SECTION (LIGHTWEIGHT GPU-LAYERED)
+   8. SUBSCRIBE & SAVE SECTION (ZERO LAYER CLIPPING JANK)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
-  contain: paint;
 }
 
 .subscribe-grid {
@@ -1074,13 +1073,11 @@ img {
   border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;
-  transform: translateZ(0);
 }
 .subscribe-img {
   width: 100%;
   height: clamp(340px, 45vw, 540px);
   object-fit: cover;
-  transform: translateZ(0);
 }
 
 .subscribe-benefits-list {
@@ -1120,12 +1117,11 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (GPU-ISOLATED & SHADOW LIGHT)
+   9. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (CLEAN STACKING CONTEXT)
    -------------------------------------------------------------------------- */
 .roastery-section {
   position: relative;
   overflow: hidden;
-  contain: paint;
 }
 
 .roastery-grid {
@@ -1144,14 +1140,12 @@ img {
 .roastery-images-composite {
   position: relative;
   min-height: 420px;
-  transform: translateZ(0);
 }
 .roastery-photo-main {
   width: 82%;
   height: 380px;
   object-fit: cover;
   border-radius: var(--radius-xl);
-  transform: translateZ(0);
 }
 .roastery-photo-accent {
   position: absolute;
@@ -1162,8 +1156,7 @@ img {
   object-fit: cover;
   border-radius: var(--radius-lg);
   border: 5px solid var(--color-cream);
-  box-shadow: 0 10px 25px rgba(42, 26, 18, 0.08); /* Lightweight shadow prevents overdraw lag */
-  transform: translateZ(0);
+  box-shadow: 0 8px 24px rgba(42, 26, 18, 0.08); /* Clean shadow prevents GPU stalls */
 }
 
 .roastery-stats-row {
@@ -1174,7 +1167,6 @@ img {
   color: var(--color-cream);
   padding: var(--space-6) var(--space-5);
   border-radius: var(--radius-xl);
-  contain: content;
 }
 @media (min-width: 640px) {
   .roastery-stats-row {
