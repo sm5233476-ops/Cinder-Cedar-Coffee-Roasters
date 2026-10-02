@@ -35,7 +35,7 @@
     <div class="container nav-container">
       <!-- Brand Wordmark / Home Anchor -->
       <a href="#hero-section" class="nav-brand" aria-label="Cinder &amp; Cedar Coffee Roasters Homepage">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="nav-brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M14 2L4 20H24L14 2Z" fill="#C2512A" opacity="0.9"/>
           <path d="M14 8L8 20H20L14 8Z" fill="#F6F0E6"/>
           <circle cx="14" cy="22" r="2.5" fill="#2A1A12"/>
@@ -55,8 +55,8 @@
 
       <!-- Navbar Action Controls -->
       <div class="nav-actions">
-        <!-- Live Shop Search Trigger -->
-        <a href="#shop-section" id="nav-search-btn" class="nav-btn-icon" aria-label="Scroll to coffee search" data-scroll-to="#shop-section">
+        <!-- Live Shop Search Trigger (Accessible Name Updated) -->
+        <a href="#shop-section" id="nav-search-btn" class="nav-btn-icon" aria-label="Search coffees" data-scroll-to="#shop-section">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -70,7 +70,7 @@
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
-          <span>Cart</span>
+          <span class="cart-btn-label">Cart</span>
           <span id="cart-badge" class="cart-badge" aria-live="polite">0</span>
         </button>
 
@@ -112,8 +112,8 @@
          ====================================================================== -->
     <section id="hero-section" class="hero-section" aria-labelledby="hero-title">
       <div class="hero-media-wrapper reveal-curtain">
-        <!-- Hero photo: Exactly hero.jpg, no lazy loading above the fold -->
-        <img id="hero-img" class="hero-img" src="hero.jpg" alt="Barista slowly pouring hot water over fresh coffee grounds in a ceramic dripper" width="1920" height="1080" fetchpriority="high" decoding="sync" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1A0F0A 100%)';this.style.display='none';">
+        <!-- Hero photo: Exactly hero.jpg with neutral alt text -->
+        <img id="hero-img" class="hero-img" src="hero.jpg" alt="Pour-over coffee being brewed" width="1920" height="1080" fetchpriority="high" decoding="sync" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1A0F0A 100%)';this.style.display='none';">
         <div class="hero-overlay" aria-hidden="true"></div>
       </div>
 
@@ -214,6 +214,7 @@
 
     <!-- ======================================================================
          SECTION 5: FROM FARM TO CUP (PINNED HORIZONTAL ON DESKTOP)
+         Real Static Semantic Markup: visible by default, no blank delay
          ====================================================================== -->
     <section id="story-pinned-section" class="story-pinned-section" aria-labelledby="story-heading">
       <div class="container story-section-header">
@@ -221,9 +222,73 @@
         <h2 id="story-heading" class="section-title">From Farm to Cup</h2>
       </div>
 
-      <!-- Desktop ScrollTrigger Pin Target / Mobile Vertical Flow -->
+      <!-- 4 Semantic Panels rendered statically for rock-solid stability -->
       <div id="story-panels-track" class="story-panels-track">
-        <!-- 4 Step Panels populated dynamically from FARM_TO_CUP_STEPS -->
+        <!-- Panel 01: Source -->
+        <div class="story-panel" data-step="01">
+          <div class="story-panel-inner">
+            <div class="story-panel__number">01</div>
+            <div class="story-panel__icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 38l12-18 8 10 16-20"/>
+                <circle cx="36" cy="12" r="4"/>
+                <path d="M4 42h40"/>
+              </svg>
+            </div>
+            <h3 class="story-panel__title">Source</h3>
+            <div class="story-panel__tagline">High-Altitude Micro-Lots</div>
+            <p class="story-panel__desc">We work directly with smallholder producer groups farming above 1,500 meters, selecting slow-ripening shade cherries cultivated with intentional care.</p>
+          </div>
+        </div>
+
+        <!-- Panel 02: Roast -->
+        <div class="story-panel" data-step="02">
+          <div class="story-panel-inner">
+            <div class="story-panel__number">02</div>
+            <div class="story-panel__icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M24 6c-3 8-10 12-10 20a10 10 0 0 0 20 0c0-8-7-12-10-20z"/>
+                <path d="M24 22c-2 3-4 5-4 8a4 4 0 0 0 8 0c0-3-2-5-4-8z"/>
+              </svg>
+            </div>
+            <h3 class="story-panel__title">Roast</h3>
+            <div class="story-panel__tagline">Small-Batch Cast Iron Drum</div>
+            <p class="story-panel__desc">Roasted in 12-kilo batches in our Portland warehouse. We monitor airflow and thermal rate of rise to honor each origin's inherent botanical character.</p>
+          </div>
+        </div>
+
+        <!-- Panel 03: Rest -->
+        <div class="story-panel" data-step="03">
+          <div class="story-panel-inner">
+            <div class="story-panel__number">03</div>
+            <div class="story-panel__icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="24" cy="24" r="18"/>
+                <polyline points="24 12 24 24 32 28"/>
+              </svg>
+            </div>
+            <h3 class="story-panel__title">Rest</h3>
+            <div class="story-panel__tagline">Targeted Degassing Phase</div>
+            <p class="story-panel__desc">Every roast rests in oxygen-controlled bins for 48 hours to release excess carbon dioxide before packaging, ensuring flavor balance in your first brew.</p>
+          </div>
+        </div>
+
+        <!-- Panel 04: Brew -->
+        <div class="story-panel" data-step="04">
+          <div class="story-panel-inner">
+            <div class="story-panel__number">04</div>
+            <div class="story-panel__icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 12h26a6 6 0 0 1 6 6v2a6 6 0 0 1-6 6H8v-14z"/>
+                <path d="M8 26v10a4 4 0 0 0 4 4h16a4 4 0 0 0 4-4V26"/>
+                <line x1="4" y1="44" x2="38" y2="44"/>
+              </svg>
+            </div>
+            <h3 class="story-panel__title">Brew</h3>
+            <div class="story-panel__tagline">Clarity in the Extraction</div>
+            <p class="story-panel__desc">From whole bean resting to precise burr grind distribution, we publish brew parameters that yield clean, balanced sweetness in every morning cup.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -233,9 +298,9 @@
     <section id="subscribe-section" class="section-cream section-spacing subscribe-section" aria-labelledby="subscribe-heading">
       <div class="container">
         <div class="subscribe-grid">
-          <!-- Packaging Photo: Exactly subscribe.jpg -->
+          <!-- Packaging Photo: Exactly subscribe.jpg with neutral alt text -->
           <div class="subscribe-media reveal-curtain">
-            <img class="subscribe-img" src="subscribe.jpg" alt="Freshly roasted specialty coffee pouch packaged with tasting cards on an oat linen surface" width="800" height="960" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
+            <img class="subscribe-img" src="subscribe.jpg" alt="Coffee bag packaging" width="800" height="960" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
           </div>
 
           <!-- Subscription Copy & Benefits -->
@@ -290,10 +355,10 @@
             </div>
           </div>
 
-          <!-- Dual Parallax Photo Composite: roastery.jpg & beans.jpg -->
+          <!-- Dual Parallax Photo Composite: roastery.jpg & beans.jpg with neutral alt texts -->
           <div class="roastery-images-composite">
-            <img class="roastery-photo-main" src="roastery.jpg" alt="Interior view of our sunlit Portland roastery warehouse featuring the cast-iron drum roaster" width="960" height="640" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
-            <img class="roastery-photo-accent" src="beans.jpg" alt="Close-up macro detail of freshly roasted specialty coffee beans resting after cooling" width="600" height="450" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #3D271D 100%)';this.style.display='none';">
+            <img class="roastery-photo-main" src="roastery.jpg" alt="Coffee roastery interior" width="960" height="640" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
+            <img class="roastery-photo-accent" src="beans.jpg" alt="Roasted coffee beans close up" width="600" height="450" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #3D271D 100%)';this.style.display='none';">
           </div>
         </div>
 
@@ -355,8 +420,8 @@
          ====================================================================== -->
     <section class="newsletter-section section-spacing" aria-labelledby="newsletter-heading">
       <div class="newsletter-media-bg" aria-hidden="true">
-        <!-- Morning photo: Exactly morning.jpg -->
-        <img src="morning.jpg" alt="Warm morning sunlight illuminating a freshly brewed cup of coffee next to an open notebook" width="1600" height="900" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1F130D 100%)';this.style.display='none';">
+        <!-- Morning photo: Exactly morning.jpg with neutral alt text -->
+        <img src="morning.jpg" alt="Cup of coffee by a window in morning light" width="1600" height="900" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1F130D 100%)';this.style.display='none';">
       </div>
 
       <div class="container newsletter-inner">
@@ -417,7 +482,7 @@
   </footer>
 
   <!-- ========================================================================
-       SHOPPING CART DRAWER (SLIDES IN FROM RIGHT)
+       SHOPPING CART DRAWER (SLIDES IN FROM RIGHT, DVH & SAFE-AREA SECURED)
        ======================================================================== -->
   <div id="cart-drawer-overlay" class="cart-drawer-overlay" tabindex="-1" aria-hidden="true"></div>
 
@@ -440,7 +505,7 @@
       </div>
     </div>
 
-    <!-- Cart Line Items Rack -->
+    <!-- Cart Line Items Rack (Middle Scrolling Container) -->
     <div id="cart-items-container" class="cart-items-container">
       <!-- Items dynamically populated via script.js -->
     </div>
@@ -452,7 +517,7 @@
       <button id="cart-continue-shopping-btn" class="btn btn-secondary-dark" type="button">Continue Shopping</button>
     </div>
 
-    <!-- Cart Totals & Checkout Trigger -->
+    <!-- Cart Totals & Checkout Trigger (Pinned to Bottom) -->
     <div id="cart-footer" class="cart-footer">
       <!-- Promo Code Input -->
       <div class="promo-box">
@@ -503,7 +568,7 @@
   </dialog>
 
   <!-- ========================================================================
-       2-STEP DEMO CHECKOUT ACCESSIBLE DIALOG
+       2-STEP DEMO CHECKOUT ACCESSIBLE DIALOG (STRICT ZERO-OVERFLOW FORM)
        ======================================================================== -->
   <dialog id="checkout-dialog" class="modal-dialog" aria-modal="true" aria-labelledby="checkout-dialog-title">
     <div class="dialog-window checkout-window">
@@ -522,33 +587,35 @@
 
         <form id="checkout-shipping-form" novalidate>
           <div class="checkout-form-grid">
-            <div class="form-group form-col-span-2">
+            <div class="form-group form-col-full">
               <label for="checkout-name" class="form-label">Full Name</label>
               <input type="text" id="checkout-name" class="form-input" required placeholder="Elena Rostova">
             </div>
-            <div class="form-group form-col-span-2">
+            <div class="form-group form-col-full">
               <label for="checkout-email" class="form-label">Email Address</label>
               <input type="email" id="checkout-email" class="form-input" required placeholder="elena@example.com">
             </div>
-            <div class="form-group form-col-span-2">
+            <div class="form-group form-col-full">
               <label for="checkout-phone" class="form-label">Phone Number</label>
               <input type="tel" id="checkout-phone" class="form-input" required placeholder="(503) 555-0199">
             </div>
-            <div class="form-group form-col-span-2">
+            <div class="form-group form-col-full">
               <label for="checkout-address" class="form-label">Street Address</label>
               <input type="text" id="checkout-address" class="form-input" required placeholder="420 Hawthorne Blvd">
             </div>
-            <div class="form-group">
-              <label for="checkout-city" class="form-label">City</label>
-              <input type="text" id="checkout-city" class="form-input" required placeholder="Portland">
-            </div>
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <div>
-                <label for="checkout-state" class="form-label">State (2 letters)</label>
+
+            <!-- Unified City / State / ZIP Grid Row (2fr 1fr 1fr, no overflow) -->
+            <div class="form-row-city-state-zip form-col-full">
+              <div class="form-group">
+                <label for="checkout-city" class="form-label">City</label>
+                <input type="text" id="checkout-city" class="form-input" required placeholder="Portland">
+              </div>
+              <div class="form-group">
+                <label for="checkout-state" class="form-label">State</label>
                 <input type="text" id="checkout-state" class="form-input" maxlength="2" required placeholder="OR" style="text-transform: uppercase;">
               </div>
-              <div>
-                <label for="checkout-zip" class="form-label">ZIP (5 digits)</label>
+              <div class="form-group">
+                <label for="checkout-zip" class="form-label">ZIP</label>
                 <input type="text" id="checkout-zip" class="form-input" maxlength="5" pattern="[0-9]{5}" required placeholder="97214">
               </div>
             </div>
@@ -576,9 +643,9 @@
         </div>
       </div>
 
-      <!-- Step 3: Real Confirmation View -->
+      <!-- Step 3: Real Confirmation View (Updated Eyebrow: "Demo order") -->
       <div id="checkout-step-3" class="checkout-step">
-        <span class="section-subtitle" style="color: var(--color-success);">Order Request Received</span>
+        <span class="section-subtitle" style="color: var(--color-success);">Demo order</span>
         <h3 class="section-title" style="font-size: var(--text-2xl);">Order Request Received (Demo)</h3>
         <p style="font-size: var(--text-sm); margin-top: 8px; margin-bottom: 16px;">Thank you for testing the Cinder &amp; Cedar concept store.</p>
         
@@ -593,16 +660,11 @@
 
   <!-- ========================================================================
        ACCESSIBLE TOAST NOTIFICATIONS (BOTTOM-CENTER SHELF ONLY)
-       Note: Bottom-right screen corner is kept completely free.
        ======================================================================== -->
   <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
   <!-- ========================================================================
        SCRIPTS IN EXACT REQUIRED ORDER
-       1. External CDN libraries (GSAP, ScrollTrigger, Lenis)
-       2. data.js
-       3. script.js
-       4. motion.js
        ======================================================================== -->
   <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -611,7 +673,6 @@
   <!-- Lenis Smooth Scroll -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.18/lenis.min.js"></script>
   <script>
-    // Fallback in case cdnjs mirror is delayed
     if (typeof Lenis === 'undefined') {
       document.write('<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"><\/script>');
     }
