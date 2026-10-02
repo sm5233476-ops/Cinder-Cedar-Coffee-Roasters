@@ -9,6 +9,88 @@
   <!-- Brand Favicon: Cinder & Cedar Tree Icon in Espresso & Terracotta -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232A1A12'/%3E%3Cpath d='M16 5L7 21H25L16 5Z' fill='%23C2512A'/%3E%3Cpath d='M16 10L10 21H22L16 10Z' fill='%23F6F0E6'/%3E%3Ccircle cx='16' cy='23' r='2.5' fill='%23C2512A'/%3E%3C/svg%3E">
 
+  <!-- SEO: Schema.org JSON-LD Structured Data for Roastery & Product Catalog -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CoffeeShop",
+        "@id": "https://cinderandcedar.example/#roastery",
+        "name": "Cinder & Cedar Coffee Roasters",
+        "description": "Small-batch specialty coffee roaster based in Portland, Oregon.",
+        "url": "https://cinderandcedar.example",
+        "telephone": "+15035550148",
+        "email": "hello@cinderandcedar.example",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "1820 Cedar Row, Suite 4",
+          "addressLocality": "Portland",
+          "addressRegion": "OR",
+          "postalCode": "97214",
+          "addressCountry": "US"
+        },
+        "openingHours": "We-Su 08:00-15:00",
+        "priceRange": "$$"
+      },
+      {
+        "@type": "ItemList",
+        "name": "Specialty Coffee Catalog",
+        "itemListElement": [
+          {
+            "@type": "Product",
+            "name": "Ethiopia Guji",
+            "category": "Single Origin",
+            "offers": { "@type": "Offer", "price": "19.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Colombia Huila",
+            "category": "Single Origin",
+            "offers": { "@type": "Offer", "price": "17.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Guatemala Antigua",
+            "category": "Single Origin",
+            "offers": { "@type": "Offer", "price": "18.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Kenya Nyeri",
+            "category": "Single Origin",
+            "offers": { "@type": "Offer", "price": "21.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Ember House Blend",
+            "category": "Blend",
+            "offers": { "@type": "Offer", "price": "16.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Cinder Espresso Blend",
+            "category": "Blend",
+            "offers": { "@type": "Offer", "price": "17.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Sunday Decaf",
+            "category": "Decaf",
+            "offers": { "@type": "Offer", "price": "18.00", "priceCurrency": "USD" }
+          },
+          {
+            "@type": "Product",
+            "name": "Tasting Trio Gift Set",
+            "category": "Gift Sets",
+            "offers": { "@type": "Offer", "price": "48.00", "priceCurrency": "USD" }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <!-- Google Fonts: Fraunces (Editorial Serif) & DM Sans (Modern Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -131,7 +213,7 @@
     </section>
 
     <!-- ======================================================================
-         SECTION 3: TASTING NOTES MARQUEE TICKER
+         SECTION 3: TASTING NOTES MARQUEE TICKER (CONTINUOUS FLOW)
          ====================================================================== -->
     <section class="marquee-section" aria-label="Coffee Tasting Profiles">
       <div class="marquee-wrapper">
@@ -319,7 +401,7 @@
     </section>
 
     <!-- ======================================================================
-         SECTION 7: ROASTERY STORY & DYNAMIC STATS COUNTERS
+         SECTION 7: ROASTERY STORY & STATS COUNTERS (DEFAULTS: 8, 7, 4)
          ====================================================================== -->
     <section id="roastery-section" class="section-oat section-spacing roastery-section" aria-labelledby="roastery-heading">
       <div class="container">
@@ -340,17 +422,18 @@
           </div>
         </div>
 
+        <!-- Stable defaults: 8, 7, 4 in HTML so they NEVER show 0! -->
         <div class="roastery-stats-row">
           <div class="stat-item">
-            <div id="stat-coffees" class="stat-number" data-stat="coffees">0</div>
+            <div id="stat-coffees" class="stat-number" data-stat="coffees">8</div>
             <div class="stat-label">Active Seasonal Coffees</div>
           </div>
           <div class="stat-item">
-            <div id="stat-origins" class="stat-number" data-stat="origins">0</div>
+            <div id="stat-origins" class="stat-number" data-stat="origins">7</div>
             <div class="stat-label">Producer Regions</div>
           </div>
           <div class="stat-item">
-            <div id="stat-roasts" class="stat-number" data-stat="roasts">0</div>
+            <div id="stat-roasts" class="stat-number" data-stat="roasts">4</div>
             <div class="stat-label">Roast Spectrum Profiles</div>
           </div>
         </div>
@@ -409,7 +492,7 @@
   </main>
 
   <!-- ========================================================================
-       SECTION 11: SITE FOOTER
+       SECTION 11: SITE FOOTER (WITH LEGAL TRUST LINKS)
        ======================================================================== -->
   <footer class="site-footer">
     <div class="container">
@@ -430,13 +513,17 @@
         </div>
 
         <div class="footer-col-links">
-          <div class="footer-col-title">Navigation</div>
+          <div class="footer-col-title">Navigation &amp; Policies</div>
           <ul class="footer-links-list">
             <li><a href="#shop-section" data-scroll-to="#shop-section">Shop Coffees</a></li>
             <li><a href="#subscribe-section" data-scroll-to="#subscribe-section">Coffee Subscriptions</a></li>
             <li><a href="#story-pinned-section" data-scroll-to="#story-pinned-section">From Farm to Cup</a></li>
             <li><a href="#roastery-section" data-scroll-to="#roastery-section">Portland Roastery</a></li>
             <li><a href="#faq-section" data-scroll-to="#faq-section">Brew Guides &amp; FAQ</a></li>
+            <!-- Essential Legal Trust Links -->
+            <li><button type="button" class="footer-policy-link" data-open-policy="shipping">Shipping &amp; Returns Policy</button></li>
+            <li><button type="button" class="footer-policy-link" data-open-policy="privacy">Privacy Policy</button></li>
+            <li><button type="button" class="footer-policy-link" data-open-policy="terms">Terms of Service</button></li>
           </ul>
         </div>
       </div>
@@ -607,8 +694,23 @@
   </dialog>
 
   <!-- ========================================================================
-       ACCESSIBLE TOAST NOTIFICATIONS
+       LEGAL TRUST POLICY MODAL (PRIVACY, TERMS, SHIPPING)
        ======================================================================== -->
+  <dialog id="policy-dialog" class="modal-dialog" aria-modal="true" aria-labelledby="policy-dialog-title">
+    <div class="dialog-window" style="max-width: 640px;">
+      <button id="policy-close-btn" class="dialog-close-btn" type="button" aria-label="Close policy window">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div id="policy-content" style="font-size: var(--text-sm); line-height: 1.6;">
+        <!-- Injected via script.js -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Accessible Toast Shelf -->
   <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
   <!-- Scripts -->
