@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — APPLICATION CORE (script.js)
-   Shop, Cart, Quick View, Checkout, Legal Policies & Background GPU Pre-Decoding
-   Complete Production Script with Image Warmer & Zero-Jank Logic
+   Shop, Cart, Quick View, Checkout, Legal Policies & Rule 7 Idle Decode Warm-up
+   Complete Production Script with Sequential GPU Texture Pre-Warming
    ========================================================================== */
 
 (function () {
@@ -21,25 +21,42 @@
   };
 
   /* --------------------------------------------------------------------------
-     2. BACKGROUND GPU IMAGE PRE-DECODER (ELIMINATES ON-SCROLL FREEZING)
-     Pre-warms textures into GPU VRAM in a non-blocking background worker
+     2. RULE 7: IDLE DECODE WARM-UP (ZERO ON-SCROLL DECODING)
+     After window load, uses requestIdleCallback to decode lazy images sequentially
      -------------------------------------------------------------------------- */
-  function preloadAndWarmImages() {
-    const heavyImages = [
-      "subscribe.jpg",
-      "roastery.jpg",
-      "beans.jpg",
-      "morning.jpg"
-    ];
+  function setupIdleDecodeWarmup() {
+    window.addEventListener("load", () => {
+      const lazyImages = Array.from(document.querySelectorAll('img[loading="lazy"]'));
+      if (lazyImages.length === 0) return;
 
-    heavyImages.forEach(src => {
-      const img = new Image();
-      img.src = src;
-      if (typeof img.decode === "function") {
-        img.decode().catch(() => {
-          // Fallback silently if image already cached
-        });
+      const scheduleIdle = window.requestIdleCallback || function (cb) {
+        return setTimeout(cb, 16);
+      };
+
+      let currentIndex = 0;
+
+      function decodeNext() {
+        if (currentIndex >= lazyImages.length) return;
+        const img = lazyImages[currentIndex++];
+
+        if (img && typeof img.decode === "function") {
+          try {
+            img.decode()
+              .catch(() => {
+                // Ignore decoding errors if image is already cached or detached
+              })
+              .finally(() => {
+                scheduleIdle(decodeNext);
+              });
+          } catch (err) {
+            scheduleIdle(decodeNext);
+          }
+        } else {
+          scheduleIdle(decodeNext);
+        }
       }
+
+      scheduleIdle(decodeNext);
     });
   }
 
@@ -1279,10 +1296,10 @@
      15. INITIALIZATION SEQUENCE
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
-    // 1. Warm GPU VRAM by background pre-decoding all large photos
-    preloadAndWarmImages();
+    // 1. Setup Rule 7: Idle Decode Warmup (Zero On-Scroll Decoding)
+    setupIdleDecodeWarmup();
 
-    // 2. Load and render state
+    // 2. Load and render application state
     state.cart = loadCartFromStorage();
     populateMarquee();
     populateFarmToCup();
