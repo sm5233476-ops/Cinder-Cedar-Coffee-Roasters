@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — MOTION SYSTEM (motion.js)
-   120Hz Inertia Scrolling, Hardware-Safe Curtain Reveals & Parallax
-   Complete Production Motion Script Compliant with All Step 2 Rules
+   120Hz Inertia Scrolling, Parallax Headroom fromTo & Curtain Fail-Safe
+   Complete Production Motion Script with Zero-Conflict Transforms
    ========================================================================== */
 
 (function () {
@@ -30,6 +30,7 @@
       duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      wheelMultiplier: 0.85,
       touchMultiplier: 1.0,
       autoRaf: false, // Rule 8: Prevents Lenis from running its own internal RAF loop
       infinite: false
@@ -50,7 +51,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     SMOOTH ANCHOR NAVIGATION (WITH NAVBAR OFFSET)
+     SMOOTH ANCHOR NAVIGATION (WITH NAVBAR OFFSET & JUMP REVEAL CATCH-UP)
      -------------------------------------------------------------------------- */
   function setupSmoothAnchorLinks() {
     const links = document.querySelectorAll("[data-scroll-to]");
@@ -73,7 +74,15 @@
         if (lenis) {
           lenis.scrollTo(targetEl, {
             offset: -72,
-            duration: 1.1
+            duration: 1.1,
+            onComplete: () => {
+              // Point 3d: Jumps past photos ensure curtains end at scaleY(0)
+              document.querySelectorAll(".media-curtain").forEach((curtain) => {
+                if (curtain.getBoundingClientRect().top < window.innerHeight) {
+                  curtain.style.transform = "scaleY(0)";
+                }
+              });
+            }
           });
         } else {
           targetEl.scrollIntoView({ behavior: "smooth" });
@@ -119,21 +128,19 @@
   }
 
   /* --------------------------------------------------------------------------
-     HERO SECTION CHOREOGRAPHY (RULES 1, 2, 3, 4, 6)
-     Curtain scaleY 1->0, img scale 1.12->1, hero parallax 6%
+     HERO SECTION CHOREOGRAPHY (POINTS 2 & 3)
+     Curtain scaleY 1->0, img scale 1.12->1, hero parallax fromTo (-3% to +3%)
      -------------------------------------------------------------------------- */
   function setupHeroAnimation() {
+    const heroCurtain = document.querySelector(".hero-curtain");
+    const heroImg = document.getElementById("hero-img");
+
     if (IMAGE_MOTION === "none" || prefersReducedMotion || typeof gsap === "undefined") {
-      const curtain = document.querySelector(".hero-curtain");
-      if (curtain) curtain.style.transform = "scaleY(0)";
+      if (heroCurtain) heroCurtain.style.transform = "scaleY(0)";
       return;
     }
 
-    const heroImg = document.getElementById("hero-img");
-    const heroCurtain = document.querySelector(".hero-curtain");
-
     if (IMAGE_MOTION === "lite") {
-      // Rule 1: "lite" = simple fade + 24px rise, no scale, no parallax
       if (heroCurtain) heroCurtain.style.transform = "scaleY(0)";
       if (heroImg) {
         heroImg.style.willChange = "transform, opacity";
@@ -152,7 +159,6 @@
         );
       }
     } else if (IMAGE_MOTION === "full") {
-      // Rule 2 & 6: Curtain scaleY from 1 to 0, img scale from 1.12 to 1, expo-out, ~1.1s, willChange removed onComplete
       if (heroCurtain && heroImg) {
         heroCurtain.style.willChange = "transform";
         heroImg.style.willChange = "transform";
@@ -180,18 +186,22 @@
         );
       }
 
-      // Rule 4: Hero parallax (speed 6%, scrub: true, desktop 992px+ only, transform yPercent only)
+      // Point 2: Hero Parallax fromTo (-3% to +3% = Total 6% delta, centered in top -7.5%)
       if (allowParallax && heroImg) {
-        gsap.to(heroImg, {
-          yPercent: 6,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "#hero-section",
-            start: "top top",
-            end: "bottom top",
-            scrub: true
+        gsap.fromTo(
+          heroImg,
+          { yPercent: -3 },
+          {
+            yPercent: 3,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#hero-section",
+              start: "top top",
+              end: "bottom top",
+              scrub: true
+            }
           }
-        });
+        );
       }
     }
 
@@ -204,13 +214,11 @@
   }
 
   /* --------------------------------------------------------------------------
-     SECTION IMAGE REVEALS & PARALLAX (RULES 1, 2, 3, 4, 6)
-     Subscribe & Roastery images with Curtain scaleY & Desktop Parallax
+     SECTION IMAGE REVEALS & PARALLAX (POINTS 1, 2, 3d)
      -------------------------------------------------------------------------- */
   function setupImageRevealsAndParallax() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Collect the static reveal frames: Subscribe, Roastery Main, Roastery Accent
     const revealTargets = [
       {
         frame: document.querySelector(".subscribe-frame"),
@@ -223,54 +231,70 @@
         curtain: document.querySelector(".roastery-main-frame .roastery-curtain"),
         img: document.querySelector(".roastery-photo-main"),
         isParallax: true,
-        speed: 5 // Rule 4: roastery 5%
+        speed: 5 // Point 2: -2.5% to +2.5% (Total 5%)
       },
       {
         frame: document.querySelector(".roastery-accent-frame"),
         curtain: document.querySelector(".roastery-accent-frame .roastery-curtain"),
         img: document.querySelector(".roastery-photo-accent"),
         isParallax: true,
-        speed: 9 // Rule 4: beans 9%
+        speed: 9 // Point 2: -4.5% to +4.5% (Total 9%)
       }
     ];
 
     revealTargets.forEach((target) => {
       if (!target.frame || !target.img) return;
 
-      // Mode "none" or reduced-motion
+      // Point 3d: Handle page reloaded while already scrolled halfway past photo
+      const rect = target.frame.getBoundingClientRect();
+      const isAlreadyPast = rect.top < window.innerHeight * 0.8;
+
       if (IMAGE_MOTION === "none" || prefersReducedMotion) {
         if (target.curtain) target.curtain.style.transform = "scaleY(0)";
+        if (!target.isParallax) target.frame.classList.add("is-revealed");
         return;
       }
 
-      // Mode "lite": Rule 1: simple fade + 24px rise, no scale, no parallax
+      if (isAlreadyPast) {
+        if (target.curtain) target.curtain.style.transform = "scaleY(0)";
+        if (!target.isParallax) {
+          target.frame.classList.add("is-revealed");
+          gsap.set(target.img, { clearProps: "transform" });
+        }
+      }
+
       if (IMAGE_MOTION === "lite") {
         if (target.curtain) target.curtain.style.transform = "scaleY(0)";
-        target.img.style.willChange = "transform, opacity";
-
-        gsap.fromTo(
-          target.img,
-          { opacity: 0, y: 24 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.85,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: target.frame,
-              start: "top 80%", // Rule 2: 20% visible
-              once: true
-            },
-            onComplete: () => {
-              target.img.style.willChange = "auto";
+        if (!isAlreadyPast) {
+          target.img.style.willChange = "transform, opacity";
+          gsap.fromTo(
+            target.img,
+            { opacity: 0, y: 24 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.85,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: target.frame,
+                start: "top 80%",
+                once: true
+              },
+              onComplete: () => {
+                target.img.style.willChange = "auto";
+                if (!target.isParallax) {
+                  gsap.set(target.img, { clearProps: "transform" });
+                  target.frame.classList.add("is-revealed");
+                }
+              }
             }
-          }
-        );
+          );
+        }
         return;
       }
 
-      // Mode "full": Rule 2 & 3: Curtain scaleY 1->0, img scale 1.12->1, expo-out, ~1.1s, play once when 20% visible
-      if (IMAGE_MOTION === "full" && target.curtain) {
+      // Mode "full": Curtain scaleY 1->0, img scale 1.12->1
+      if (IMAGE_MOTION === "full" && target.curtain && !isAlreadyPast) {
         target.curtain.style.willChange = "transform";
         target.img.style.willChange = "transform";
 
@@ -278,13 +302,19 @@
           defaults: { ease: "expo.out", duration: 1.1 },
           scrollTrigger: {
             trigger: target.frame,
-            start: "top 80%", // Rule 2: 20% visible
-            once: true
+            start: "top 80%",
+            once: true,
+            fastScrollEnd: true
           },
           onComplete: () => {
-            // Rule 6: will-change removed in onComplete
             target.curtain.style.willChange = "auto";
             target.img.style.willChange = "auto";
+
+            // Point 1: For non-parallax images (subscribe.jpg), clearProps transform & add is-revealed class
+            if (!target.isParallax) {
+              gsap.set(target.img, { clearProps: "transform" });
+              target.frame.classList.add("is-revealed");
+            }
           }
         });
 
@@ -303,19 +333,24 @@
         );
       }
 
-      // Rule 4: Parallax ("full" only, desktop only 992px+, fine pointer, transform yPercent only)
-      // Exactly 3 images on whole page: hero (6%), roastery (5%), beans (9%). No parallax on subscribe.jpg & morning.jpg.
+      // Point 2: Parallax fromTo (symmetric negative to positive yPercent)
+      // Roastery (-2.5% to +2.5%), Beans (-4.5% to +4.5%)
       if (allowParallax && target.isParallax && target.img) {
-        gsap.to(target.img, {
-          yPercent: target.speed,
-          ease: "none",
-          scrollTrigger: {
-            trigger: target.frame,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
+        const halfSpeed = target.speed / 2;
+        gsap.fromTo(
+          target.img,
+          { yPercent: -halfSpeed },
+          {
+            yPercent: halfSpeed,
+            ease: "none",
+            scrollTrigger: {
+              trigger: target.frame,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true
+            }
           }
-        });
+        );
       }
     });
   }
@@ -326,7 +361,6 @@
   function setupSectionReveals() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    // Reviews Staggered Slide-In
     const reviewCards = document.querySelectorAll(".review-card");
     if (reviewCards.length > 0) {
       gsap.from(reviewCards, {
@@ -343,7 +377,6 @@
       });
     }
 
-    // Dynamic Stats Count-Up (DOM Reflow Throttled)
     const statsRow = document.querySelector(".roastery-stats-row");
     if (statsRow) {
       ScrollTrigger.create({
@@ -402,7 +435,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     FROM FARM TO CUP PROCESS GRID REVEAL
+     FROM FARM TO CUP (SOLID STAGGERED REVEAL)
      -------------------------------------------------------------------------- */
   function setupStorySectionAnimation() {
     if (prefersReducedMotion || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
@@ -543,17 +576,26 @@
   }
 
   /* --------------------------------------------------------------------------
-     INITIALIZATION & RULE 9 LAYOUT REFRESH HOOKS
+     INITIALIZATION & POINT 3b/3c/9 LAYOUT & SAFETY HOOKS
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
-    setupSmoothAnchorLinks();
-    setupScrollDynamics();
-    setupHeroAnimation();
-    setupImageRevealsAndParallax();
-    setupSectionReveals();
-    setupStorySectionAnimation();
-    setupFlyToCartListener();
-    setupMagneticAndCursor();
+    try {
+      setupSmoothAnchorLinks();
+      setupScrollDynamics();
+      setupHeroAnimation();
+      setupImageRevealsAndParallax();
+      setupSectionReveals();
+      setupStorySectionAnimation();
+      setupFlyToCartListener();
+      setupMagneticAndCursor();
+
+      // Point 3b: Set flag confirming motion initialized with zero errors
+      window.__motionReady = true;
+    } catch (err) {
+      console.warn("Motion initialization error, uncovering photos fail-safe:", err);
+      // Point 3b: Remove has-js so curtains immediately reveal photos if JS throws
+      document.documentElement.classList.remove("has-js");
+    }
   });
 
   // Rule 9: After window load and fonts ready, call ScrollTrigger.refresh() once
