@@ -6,6 +6,16 @@
   <title>Cinder &amp; Cedar Coffee Roasters — Small-Batch Specialty Coffee</title>
   <meta name="description" content="Small-batch specialty coffee roasters based in Portland, Oregon. Thoughtfully roasted single origins and signature blends delivered fresh to your door.">
 
+  <!-- Immediate JS Detection & 4-Second Curtain Fail-Safe (Point 3) -->
+  <script>
+    document.documentElement.classList.add('has-js');
+    setTimeout(function() {
+      if (!window.__motionReady) {
+        document.documentElement.classList.remove('has-js');
+      }
+    }, 4000);
+  </script>
+
   <!-- Brand Favicon: Cinder & Cedar Tree Icon in Espresso & Terracotta -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232A1A12'/%3E%3Cpath d='M16 5L7 21H25L16 5Z' fill='%23C2512A'/%3E%3Cpath d='M16 10L10 21H22L16 10Z' fill='%23F6F0E6'/%3E%3Ccircle cx='16' cy='23' r='2.5' fill='%23C2512A'/%3E%3C/svg%3E">
 
@@ -118,7 +128,6 @@
 
   <header id="site-header" class="site-header">
     <div class="container nav-container">
-      <!-- Brand Wordmark / Home Anchor -->
       <a href="#hero-section" class="nav-brand" aria-label="Cinder &amp; Cedar Coffee Roasters Homepage">
         <svg class="nav-brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M14 2L4 20H24L14 2Z" fill="#C2512A" opacity="0.9"/>
@@ -128,7 +137,6 @@
         <span class="brand-wordmark">Cinder <span>&amp;</span> Cedar</span>
       </a>
 
-      <!-- Desktop Navigation Links -->
       <nav aria-label="Main Navigation">
         <ul id="nav-links" class="nav-links">
           <li><a href="#shop-section" class="nav-link" data-scroll-to="#shop-section">Shop</a></li>
@@ -138,9 +146,7 @@
         </ul>
       </nav>
 
-      <!-- Navbar Action Controls -->
       <div class="nav-actions">
-        <!-- Live Shop Search Trigger -->
         <a href="#shop-section" id="nav-search-btn" class="nav-btn-icon" aria-label="Search coffees" data-scroll-to="#shop-section">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
@@ -148,7 +154,6 @@
           </svg>
         </a>
 
-        <!-- Cart Trigger Button (Navbar Top-Right) -->
         <button id="nav-cart-btn" class="nav-cart-btn btn-magnetic" type="button" aria-label="Open shopping cart drawer" aria-haspopup="dialog">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -159,7 +164,6 @@
           <span id="cart-badge" class="cart-badge" aria-live="polite">0</span>
         </button>
 
-        <!-- Mobile Menu Toggle -->
         <button id="mobile-menu-toggle" class="nav-btn-icon mobile-menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -194,7 +198,7 @@
   <main id="main-content">
     <!-- ======================================================================
          SECTION 2: HERO SECTION (POUR-OVER COFFEE)
-         Static Frame + ScaleY Curtain Overlay (Zero clip-path)
+         Static Frame + ScaleY Curtain Overlay + Parallax Headroom
          ====================================================================== -->
     <section id="hero-section" class="hero-section" aria-labelledby="hero-title">
       <div class="hero-media-wrapper photo-frame">
@@ -406,7 +410,7 @@
 
     <!-- ======================================================================
          SECTION 7: ROASTERY STORY & STATS COUNTERS
-         Static Frames + ScaleY Curtain Overlays in Oat Color + Parallax Targets
+         Static Frames + ScaleY Curtain Overlays + Parallax Headroom
          ====================================================================== -->
     <section id="roastery-section" class="section-oat section-spacing roastery-section" aria-labelledby="roastery-heading">
       <div class="container">
