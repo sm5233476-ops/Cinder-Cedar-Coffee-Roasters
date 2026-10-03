@@ -1,6 +1,6 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — APPLICATION CORE (script.js)
-   Shop, Cart, Quick View, Checkout, Legal Policies & Rule 7 Idle Decode Warm-up
+   Shop, Cart, Quick View, Checkout, Legal Policies & Point 4 Eager Decode
    Complete Production Script with Sequential GPU Texture Pre-Warming
    ========================================================================== */
 
@@ -21,13 +21,18 @@
   };
 
   /* --------------------------------------------------------------------------
-     2. RULE 7: IDLE DECODE WARM-UP (ZERO ON-SCROLL DECODING)
-     After window load, uses requestIdleCallback to decode lazy images sequentially
+     2. POINT 4: EAGER SEQUENTIAL IDLE DECODE WARM-UP
+     Switches loading="eager" on window load, then decodes sequentially via idle queue
      -------------------------------------------------------------------------- */
   function setupIdleDecodeWarmup() {
     window.addEventListener("load", () => {
       const lazyImages = Array.from(document.querySelectorAll('img[loading="lazy"]'));
       if (lazyImages.length === 0) return;
+
+      // Point 4: Switch to eager so browser starts decoding without waiting for scroll proximity
+      lazyImages.forEach(img => {
+        img.loading = "eager";
+      });
 
       const scheduleIdle = window.requestIdleCallback || function (cb) {
         return setTimeout(cb, 16);
@@ -1296,7 +1301,7 @@
      15. INITIALIZATION SEQUENCE
      -------------------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", () => {
-    // 1. Setup Rule 7: Idle Decode Warmup (Zero On-Scroll Decoding)
+    // 1. Point 4: Setup Eager Sequential Decode Warm-Up
     setupIdleDecodeWarmup();
 
     // 2. Load and render application state
