@@ -194,9 +194,11 @@
   <main id="main-content">
     <!-- ======================================================================
          SECTION 2: HERO SECTION (POUR-OVER COFFEE)
+         Static Frame + ScaleY Curtain Overlay (Zero clip-path)
          ====================================================================== -->
     <section id="hero-section" class="hero-section" aria-labelledby="hero-title">
-      <div class="hero-media-wrapper reveal-curtain">
+      <div class="hero-media-wrapper photo-frame">
+        <div class="media-curtain hero-curtain" aria-hidden="true"></div>
         <img id="hero-img" class="hero-img" src="hero.jpg" alt="Pour-over coffee being brewed" width="1920" height="1080" fetchpriority="high" decoding="sync" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #1A0F0A 100%)';this.style.display='none';">
         <div class="hero-overlay" aria-hidden="true"></div>
       </div>
@@ -357,11 +359,13 @@
 
     <!-- ======================================================================
          SECTION 6: SUBSCRIBE & SAVE SECTION
+         Static Frame + ScaleY Curtain Overlay in Cream Color
          ====================================================================== -->
     <section id="subscribe-section" class="section-cream section-spacing subscribe-section" aria-labelledby="subscribe-heading">
       <div class="container">
         <div class="subscribe-grid">
-          <div class="subscribe-media reveal-curtain">
+          <div class="photo-frame subscribe-frame">
+            <div class="media-curtain subscribe-curtain" aria-hidden="true"></div>
             <img class="subscribe-img" src="subscribe.jpg" alt="Coffee bag packaging" width="800" height="960" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
           </div>
 
@@ -401,7 +405,8 @@
     </section>
 
     <!-- ======================================================================
-         SECTION 7: ROASTERY STORY & STATS COUNTERS (DEFAULTS: 8, 7, 4)
+         SECTION 7: ROASTERY STORY & STATS COUNTERS
+         Static Frames + ScaleY Curtain Overlays in Oat Color + Parallax Targets
          ====================================================================== -->
     <section id="roastery-section" class="section-oat section-spacing roastery-section" aria-labelledby="roastery-heading">
       <div class="container">
@@ -417,12 +422,17 @@
           </div>
 
           <div class="roastery-images-composite">
-            <img class="roastery-photo-main" src="roastery.jpg" alt="Coffee roastery interior" width="960" height="640" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
-            <img class="roastery-photo-accent" src="beans.jpg" alt="Roasted coffee beans close up" width="600" height="450" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #3D271D 100%)';this.style.display='none';">
+            <div class="photo-frame roastery-main-frame">
+              <div class="media-curtain roastery-curtain" aria-hidden="true"></div>
+              <img class="roastery-photo-main" src="roastery.jpg" alt="Coffee roastery interior" width="960" height="640" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #EADFCC 0%, #D4C5AE 100%)';this.style.display='none';">
+            </div>
+            <div class="photo-frame roastery-accent-frame">
+              <div class="media-curtain roastery-curtain" aria-hidden="true"></div>
+              <img class="roastery-photo-accent" src="beans.jpg" alt="Roasted coffee beans close up" width="600" height="450" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.style.background='linear-gradient(135deg, #2A1A12 0%, #3D271D 100%)';this.style.display='none';">
+            </div>
           </div>
         </div>
 
-        <!-- Stable defaults: 8, 7, 4 in HTML so they NEVER show 0! -->
         <div class="roastery-stats-row">
           <div class="stat-item">
             <div id="stat-coffees" class="stat-number" data-stat="coffees">8</div>
@@ -520,7 +530,6 @@
             <li><a href="#story-pinned-section" data-scroll-to="#story-pinned-section">From Farm to Cup</a></li>
             <li><a href="#roastery-section" data-scroll-to="#roastery-section">Portland Roastery</a></li>
             <li><a href="#faq-section" data-scroll-to="#faq-section">Brew Guides &amp; FAQ</a></li>
-            <!-- Essential Legal Trust Links -->
             <li><button type="button" class="footer-policy-link" data-open-policy="shipping">Shipping &amp; Returns Policy</button></li>
             <li><button type="button" class="footer-policy-link" data-open-policy="privacy">Privacy Policy</button></li>
             <li><button type="button" class="footer-policy-link" data-open-policy="terms">Terms of Service</button></li>
@@ -704,16 +713,14 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <div id="policy-content" style="font-size: var(--text-sm); line-height: 1.6;">
-        <!-- Injected via script.js -->
-      </div>
+      <div id="policy-content" style="font-size: var(--text-sm); line-height: 1.6;"></div>
     </div>
   </dialog>
 
   <!-- Accessible Toast Shelf -->
   <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
-  <!-- Scripts -->
+  <!-- Scripts in Required Order -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.18/lenis.min.js"></script>
