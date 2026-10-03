@@ -236,15 +236,15 @@ const TASTING_NOTES_ROW_2 = Object.freeze([
 ]);
 
 /**
- * FROM FARM TO CUP — 4 PINNED HORIZONTAL PANELS
- * Big numbers and crisp geometric SVG icons (no external photo assets).
+ * FROM FARM TO CUP — 4 PANELS
+ * Soft, accurate roastery process wording.
  */
 const FARM_TO_CUP_STEPS = Object.freeze([
   {
     number: "01",
     title: "Source",
     tagline: "High-Altitude Micro-Lots",
-    description: "We work directly with smallholder producer groups farming above 1,500 meters, selecting slow-ripening shade cherries cultivated with intentional care.",
+    description: "We taste many samples from smallholder-grown lots before choosing each coffee.",
     iconSvg: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 38l12-18 8 10 16-20"/><circle cx="36" cy="12" r="4"/><path d="M4 42h40"/></svg>`
   },
   {
@@ -258,21 +258,20 @@ const FARM_TO_CUP_STEPS = Object.freeze([
     number: "03",
     title: "Rest",
     tagline: "Targeted Degassing Phase",
-    description: "Every roast rests in oxygen-controlled bins for 48 hours to release excess carbon dioxide before packaging, ensuring flavor balance in your first brew.",
+    description: "Each roast rests for a couple of days to release carbon dioxide before packaging.",
     iconSvg: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="18"/><polyline points="24 12 24 24 32 28"/></svg>`
   },
   {
     number: "04",
     title: "Brew",
     tagline: "Clarity in the Extraction",
-    description: "From whole bean resting to precise burr grind distribution, we publish brew parameters that yield clean, balanced sweetness in every morning cup.",
+    description: "We share simple brew guides to help you find a clean, balanced cup.",
     iconSvg: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12h26a6 6 0 0 1 6 6v2a6 6 0 0 1-6 6H8v-14z"/><path d="M8 26v10a4 4 0 0 0 4 4h16a4 4 0 0 0 4-4V26"/><line x1="4" y1="44" x2="38" y2="44"/></svg>`
   }
 ]);
 
 /**
  * SAMPLE REVIEWS (PORTFOLIO CONCEPT)
- * Note: Clearly framed as illustrative reviews for a concept roastery project.
  */
 const SAMPLE_REVIEWS = Object.freeze([
   {
@@ -306,7 +305,6 @@ const SAMPLE_REVIEWS = Object.freeze([
 
 /**
  * ACCESSIBLE FREQUENTLY ASKED QUESTIONS (FAQS)
- * Short, non-absolute, realistic specialty coffee guidance.
  */
 const FAQS = Object.freeze([
   {
@@ -343,17 +341,14 @@ const FAQS = Object.freeze([
 
 /**
  * DYNAMIC STATS COMPUTATION
- * Computed strictly from PRODUCTS data so it always stays synchronized.
  */
 function getRoasteryStats() {
   const totalCoffees = PRODUCTS.length;
   
-  // Extract unique origins
   const uniqueOrigins = new Set(
     PRODUCTS.map(p => p.origin.split(",")[p.origin.split(",").length - 1].trim())
   );
   
-  // Extract unique roast numbers
   const uniqueRoasts = new Set(PRODUCTS.map(p => p.roast));
   
   return {
@@ -365,12 +360,6 @@ function getRoasteryStats() {
 
 /**
  * PROCEDURAL COFFEE BAG SVG GENERATOR
- * Generates an architectural, crisp vector illustration of a specialty coffee bag.
- * Built strictly from constant product data—never uses user input.
- *
- * @param {Object} product - Product entry from PRODUCTS
- * @param {Object} [options] - Configuration overrides (e.g. width, height)
- * @returns {string} Safe inline SVG markup
  */
 function generateBagSvg(product, options = {}) {
   const width = options.width || 240;
@@ -379,7 +368,6 @@ function generateBagSvg(product, options = {}) {
   const accentColor = product.accentColor || "#F6F0E6";
   const roastLevel = typeof product.roast === "number" ? product.roast : 3;
 
-  // Render 5 roast level indicator dots
   let roastDotsSvg = "";
   for (let i = 1; i <= 5; i++) {
     const cx = 80 + (i - 1) * 20;
@@ -387,62 +375,49 @@ function generateBagSvg(product, options = {}) {
     roastDotsSvg += `<circle cx="${cx}" cy="246" r="4.5" fill="${isFilled ? bagColor : "transparent"}" stroke="${bagColor}" stroke-width="1.5" />`;
   }
 
-  // Safe sanitized strings from constant product object
   const productName = product.name;
   const productCategory = product.category.toUpperCase();
 
   return `
     <svg class="coffee-bag-svg" width="${width}" height="${height}" viewBox="0 0 240 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Specialty coffee pouch for ${productName}">
       <defs>
-        <!-- Soft lighting gradient for 3D packaging depth -->
         <linearGradient id="bag-shade-${product.id}" x1="20" y1="20" x2="220" y2="300" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="${bagColor}" stop-opacity="0.95"/>
           <stop offset="70%" stop-color="${bagColor}" stop-opacity="1"/>
           <stop offset="100%" stop-color="#140B07" stop-opacity="0.9"/>
         </linearGradient>
-        <!-- Subtle paper texture overlay -->
         <linearGradient id="label-crease-${product.id}" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.08"/>
           <stop offset="100%" stop-color="#000000" stop-opacity="0.05"/>
         </linearGradient>
       </defs>
 
-      <!-- Main Gusseted Bag Silhouette -->
       <path d="M 44 48 L 196 48 L 212 92 L 208 304 C 208 308 204 312 200 312 L 40 312 C 36 312 32 308 32 304 L 28 92 Z" fill="url(#bag-shade-${product.id})" />
 
-      <!-- Top Fold & Heat Seal Strip -->
       <path d="M 40 48 L 200 48 L 196 26 C 196 22 192 18 188 18 L 52 18 C 48 18 44 22 44 26 Z" fill="${bagColor}" opacity="0.85"/>
       <line x1="44" y1="36" x2="196" y2="36" stroke="${accentColor}" stroke-opacity="0.25" stroke-dasharray="3 3" stroke-width="1.5"/>
 
-      <!-- Bag Gusset Side Shadow Accents -->
       <path d="M 28 92 L 48 100 L 48 306 L 32 304 Z" fill="#000000" opacity="0.18"/>
       <path d="M 212 92 L 192 100 L 192 306 L 208 304 Z" fill="#000000" opacity="0.22"/>
 
-      <!-- Degassing Aroma Valve -->
       <circle cx="120" cy="74" r="7" fill="${bagColor}" stroke="${accentColor}" stroke-opacity="0.3" stroke-width="1.5"/>
       <circle cx="120" cy="74" r="2.5" fill="#140B07" opacity="0.6"/>
 
-      <!-- Editorial Front Label Plaque -->
       <rect x="52" y="102" width="136" height="172" rx="8" fill="#F6F0E6" stroke="#EADFCC" stroke-width="1.5"/>
       <rect x="52" y="102" width="136" height="172" rx="8" fill="url(#label-crease-${product.id})"/>
 
-      <!-- Micro Typography on Bag Label -->
       <text x="120" y="128" fill="#C2512A" font-family="'DM Sans', system-ui, sans-serif" font-size="8" font-weight="700" letter-spacing="1.5" text-anchor="middle">CINDER &amp; CEDAR</text>
       <line x1="72" y1="136" x2="168" y2="136" stroke="#2A1A12" stroke-opacity="0.15" stroke-width="1"/>
 
-      <!-- Product Name (Wraps or Centers cleanly) -->
       <text x="120" y="158" fill="#2A1A12" font-family="'Fraunces', Georgia, serif" font-size="14" font-weight="600" text-anchor="middle">${productName.split(" ")[0]}</text>
       <text x="120" y="176" fill="#2A1A12" font-family="'Fraunces', Georgia, serif" font-size="13" font-style="italic" text-anchor="middle">${productName.split(" ").slice(1).join(" ")}</text>
 
-      <!-- Category Pill -->
       <rect x="76" y="190" width="88" height="16" rx="8" fill="#EADFCC" fill-opacity="0.7"/>
       <text x="120" y="201" fill="#2A1A12" font-family="'DM Sans', system-ui, sans-serif" font-size="7.5" font-weight="600" letter-spacing="1" text-anchor="middle">${productCategory}</text>
 
-      <!-- Roast Level Indicator Header & Dots -->
       <text x="120" y="234" fill="#2A1A12" opacity="0.6" font-family="'DM Sans', system-ui, sans-serif" font-size="7" font-weight="600" letter-spacing="1" text-anchor="middle">ROAST SPECTRUM</text>
       ${roastDotsSvg}
 
-      <!-- Bottom Weight Note -->
       <text x="120" y="266" fill="#2A1A12" opacity="0.45" font-family="'DM Sans', system-ui, sans-serif" font-size="6.5" letter-spacing="0.5" text-anchor="middle">WHOLE BEAN &bull; PORTLAND, OR</text>
     </svg>
   `.trim();
