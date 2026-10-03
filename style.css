@@ -1,7 +1,7 @@
 /* ==========================================================================
    CINDER & CEDAR COFFEE ROASTERS — DESIGN SYSTEM & STYLES (style.css)
    Warm, Editorial, High-Performance Specialty Coffee E-Commerce
-   Complete Stylesheet with Static Photo Frames, Curtains & GPU-Safe Transforms
+   Complete Stylesheet with Parallax Headroom & Zero-Conflict Transitions
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -210,9 +210,9 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   3. STATIC PHOTO FRAMES & CURTAIN OVERLAYS (STEP 2 RULES 2 & 3)
-   Wrapper is completely STATIC (contain: paint, overflow: hidden, isolation).
-   Animation occurs strictly on inner <img> and .media-curtain.
+   3. STATIC PHOTO FRAMES & CURTAIN FAIL-SAFE (POINTS 1, 2, 3)
+   Wrapper is completely STATIC. Default is scaleY(0) (photos visible).
+   Only covered if .has-js is present on <html>.
    -------------------------------------------------------------------------- */
 .photo-frame {
   position: relative;
@@ -222,13 +222,17 @@ img {
   contain: paint;
 }
 
+/* Point 3: Curtains uncovered by default (scaleY 0); covered ONLY under .has-js */
 .media-curtain {
   position: absolute;
   inset: 0;
   z-index: 2;
   transform-origin: top;
-  transform: scaleY(1);
+  transform: scaleY(0);
   pointer-events: none;
+}
+.has-js .media-curtain {
+  transform: scaleY(1);
 }
 
 .hero-curtain {
@@ -241,12 +245,12 @@ img {
   background-color: var(--color-oat);
 }
 
-/* Slow Transform-Only Hover Zoom (Step 2 Rule 5) */
-.photo-frame img {
+/* Point 1: Hover zoom ONLY on non-parallax images after reveal completion (.is-revealed) */
+.subscribe-frame.is-revealed img {
   transition: transform 650ms var(--ease-out-expo);
 }
 @media (hover: hover) and (pointer: fine) {
-  .photo-frame:hover img {
+  .subscribe-frame.is-revealed:hover img {
     transform: scale(1.04);
   }
 }
@@ -482,7 +486,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   5. HERO SECTION
+   5. HERO SECTION (POINT 2: EXACT PARALLAX HEADROOM)
    -------------------------------------------------------------------------- */
 .hero-section {
   position: relative;
@@ -501,15 +505,20 @@ img {
   border-radius: 0;
 }
 
+/* Point 2: Parallax Headroom: top -7.5%, height 115% on desktop */
 .hero-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform-origin: center center;
 }
 @media (min-width: 992px) {
-  .hero-img {
-    height: 115%; /* Travel distance for 6% parallax */
+  #hero-img {
+    position: absolute;
+    left: 0;
+    top: -7.5%;
+    width: 100%;
+    height: 115%;
+    object-fit: cover;
   }
 }
 
@@ -877,7 +886,7 @@ img {
   opacity: 1;
 }
 
-/* Product Bag Visual with Slow Zoom & Tilt (Rule 5) */
+/* Product Bag Visual with Slow Zoom & Tilt */
 .product-card__visual {
   position: relative;
   background-color: var(--color-cream);
@@ -1100,7 +1109,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. SUBSCRIBE & SAVE SECTION
+   9. SUBSCRIBE & SAVE SECTION (NON-PARALLAX)
    -------------------------------------------------------------------------- */
 .subscribe-section {
   position: relative;
@@ -1129,7 +1138,6 @@ img {
   height: 100%;
   object-fit: cover;
   display: block;
-  transform-origin: center center;
 }
 
 .subscribe-benefits-list {
@@ -1169,8 +1177,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   10. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS
-   Desktop 115% Height Geometry for Roastery & Beans Parallax
+   10. ROASTERY PARALLAX STORY & DYNAMIC COUNTERS (POINT 2: EXACT HEADROOM)
    -------------------------------------------------------------------------- */
 .roastery-section {
   position: relative;
@@ -1211,20 +1218,23 @@ img {
   box-shadow: 0 8px 24px rgba(42, 26, 18, 0.08);
 }
 
+/* Point 2: Parallax Headroom: top -7.5%, height 115% on desktop */
 .roastery-photo-main,
 .roastery-photo-accent {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transform-origin: center center;
 }
-
-/* Desktop Parallax Image Heights (Rule 4: 115% Height for Travel Distance) */
 @media (min-width: 992px) {
   .roastery-photo-main,
   .roastery-photo-accent {
+    position: absolute;
+    left: 0;
+    top: -7.5%;
+    width: 100%;
     height: 115%;
+    object-fit: cover;
   }
 }
 
@@ -2033,7 +2043,6 @@ img {
 
 /* --------------------------------------------------------------------------
    18. MAGNETIC CURSOR FOLLOWER
-   Only transitions opacity; transform is handled strictly by GSAP quickTo.
    -------------------------------------------------------------------------- */
 .custom-cursor {
   display: none;
